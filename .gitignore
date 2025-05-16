@@ -186,3 +186,5 @@ data/
 VisualTCAV/
 .idea/
 outputs/
+comfyui_output/
+experiments/

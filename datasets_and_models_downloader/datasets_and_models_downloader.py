@@ -69,6 +69,7 @@ if __name__ == "__main__":
 	makedirs(visual_tcav_models_inception_dir_path, exist_ok=True)
 	makedirs(visual_tcav_models_resnet_dir_path, exist_ok=True)
 	makedirs(visual_tcav_models_vgg_dir_path, exist_ok=True)
+	makedirs(visual_tcav_models_convnext_dir_path, exist_ok=True)
 
 	makedirs(visual_tcav_test_images_dir_path, exist_ok=True)
 
@@ -113,6 +114,7 @@ if __name__ == "__main__":
 	convnext_classes_file.close()
 
 	print("Done!")
+	exit()
 
 
 # Images download

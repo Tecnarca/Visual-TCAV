@@ -10,6 +10,8 @@ import types
 import numpy as np
 import matplotlib.pyplot as plt
 
+REPO_ROOT_PATH = Path(__file__).parent.parent
+
 
 def save_images(images, concept_name):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -135,4 +137,4 @@ class ExperimentLogger:
         return summary
 
 
-LOGGER = ExperimentLogger(root_dir=Path(__file__).parent.parent.parent / "experiments", base_name="test_runs")
+LOGGER = ExperimentLogger(root_dir=REPO_ROOT_PATH / "experiments", base_name="test_runs")

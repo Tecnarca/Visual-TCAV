@@ -14,7 +14,7 @@
 # Do not generate "__pycache__" folder
 import sys
 from pathlib import Path
-from src.loggers import LOGGER
+from src.loggers import LOGGER, REPO_ROOT_PATH
 
 sys.dont_write_bytecode = True
 
@@ -88,7 +88,7 @@ class VisualTCAV:
         concept_images_dir=None,
         random_images_folder=None,
     ):
-
+        visual_tcav_dir = str(REPO_ROOT_PATH / visual_tcav_dir)
         # Folders and directories
         self.models_dir = (
             os.path.join(visual_tcav_dir, "models") if not models_dir else models_dir
@@ -1533,7 +1533,6 @@ class KerasModelWrapper:
 
         # Batching
         self.batch_size = batch_size
-
         self.model = tf.keras.models.load_model(
             model_path, custom_objects={"mse": MeanSquaredError()}
         )

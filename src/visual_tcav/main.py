@@ -4,7 +4,7 @@ from config_loader import load_config
 
 from src.visual_tcav.framework.run_visual_tcav import (
     run_global_visual_tcav, run_local_visual_tcav)
-from src.loggers import LOGGER
+from src.loggers import LOGGER, REPO_ROOT_PATH
 
 
 def run_all_tcavs(object_class, concept_group, model):
@@ -28,7 +28,7 @@ def run_all_tcavs(object_class, concept_group, model):
         )
 
 
-def main(config_path: str = "../../config.yaml"):
+def main(config_path: str):
     config = load_config(config_path)
     LOGGER.log_config(config.model_dump())
     for object_class in config.classes:
@@ -41,7 +41,7 @@ def main(config_path: str = "../../config.yaml"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Visual TCAV analysis using a config file.")
-    parser.add_argument("config_path", type=str, help="Path to the YAML configuration file.")
+    parser.add_argument("config_path", type=str, nargs="?", default=str(REPO_ROOT_PATH / "configs/config_minimal.yaml"), help="Path to the YAML configuration file (default: config.yaml).")
     args = parser.parse_args()
 
     main(args.config_path)
