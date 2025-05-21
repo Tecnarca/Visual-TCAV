@@ -1,10 +1,18 @@
 classes:
-  - name: zebra
-    example_image: zebra.jpg
+  - name: dalmatian
+    example_image: dalmatian.jpg
     concepts_groups:
+      - true_label: dotted
+        generated:
+          #- dotted_flux
+          #- dotted_sd35
+          - dotted_cgpt
       - true_label: striped
         generated:
-          - striped_cgpt_with_zebra_parts
+          #- striped_flux
+          #- striped_sd35
+          - striped_cgpt
+
 
 models:
   - name: ResNet50V2
