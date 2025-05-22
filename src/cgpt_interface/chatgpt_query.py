@@ -6,9 +6,10 @@ from src.loggers import save_images
 
 # Prompts
 positive_prompt = """
-    A realistic image of a dotted texture. Can belong to anything.
+    A realistic image of a dotted, spotted or stained texture.
+    Can belong to anything.
     Dots can have different shapes and be imperfect.
-    I want the dots to be seen from different angles
+    I want the dots to be seen from different angles, to have different styles and colors.
     """
 
 if __name__ == "__main__":
