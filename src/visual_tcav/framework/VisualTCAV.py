@@ -853,7 +853,7 @@ class LocalVisualTCAV(VisualTCAV):
 
             # Show
             fig.tight_layout()
-            LOGGER.log_image(plt, self.concepts[0])
+            LOGGER.log_figure(plt, self.concepts[0])
             plt.show()
 
     ##### Get CAVs #####
@@ -1231,7 +1231,7 @@ class GlobalVisualTCAV(VisualTCAV):
         fig.tight_layout()
         plt.ylim(bottom=0, top=max(0.1, plt.ylim()[1]))
         plt.xlim(left=-0.5, right=0.5 + len(self.concepts) - 1)
-        LOGGER.log_image(plt, self.concepts[0])
+        LOGGER.log_figure(plt, self.concepts[0])
         plt.show()
 
     ##### Print stats and information #####

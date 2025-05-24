@@ -13,16 +13,6 @@ import matplotlib.pyplot as plt
 REPO_ROOT_PATH = Path(__file__).parent.parent
 
 
-def save_images(images, concept_name):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_folder = Path(f"outputs/{concept_name}_{timestamp}")
-    output_folder.mkdir(parents=True, exist_ok=True)
-    for i, image in enumerate(images):
-        if isinstance(image, bytes):
-            with open(f"{output_folder}/{concept_name}{i}.png", "wb") as f:
-                f.write(image)
-        else:
-            image.save(f"{output_folder}/{concept_name}{i}.png")
 
 class ExperimentLogger:
     def __init__(self, root_dir: str = "experiments", base_name: str = "experiment"):
@@ -101,7 +91,7 @@ class ExperimentLogger:
 
         print(f"[Logger] Logged table to {table_path.name}")
 
-    def log_image(self, fig: plt.Figure, name: str):
+    def log_figure(self, fig: plt.Figure, name: str):
         images_dir = self.experiment_path / "images"
         base_filename = f"{name}.png"
         image_path = images_dir / base_filename
@@ -111,7 +101,28 @@ class ExperimentLogger:
             count += 1
 
         fig.savefig(image_path, bbox_inches="tight")
-        print(f"[Logger] Saved image to {image_path.name}")
+        print(f"[Logger] Saved figure to {image_path.name}")
+
+    def save_images(self, images, concept_name):
+        images_dir = self.experiment_path / "images"
+        output_folder = images_dir / concept_name
+        output_folder.mkdir(parents=True, exist_ok=True)
+        for i, image in enumerate(images):
+
+            count = 1
+            output_path = output_folder / f"{concept_name}_{count}.png"
+
+            while output_path.exists():
+                output_path = output_folder / f"{concept_name}_{count}.png"
+                count += 1
+
+            if isinstance(image, bytes):
+                with open(output_path, "wb") as f:
+                    f.write(image)
+            else:
+                image.save(output_path)
+
+        print(f"[Logger] Saved image(s) to {output_folder}")
 
 
     def log_text(self, text: str):

@@ -2,19 +2,22 @@ import base64
 import time
 
 import openai
-from src.loggers import save_images
+from src.loggers import LOGGER
 
 # Prompts
 positive_prompt = """
-    A realistic image of a dotted, spotted or stained texture.
-    Can belong to anything.
-    Dots can have different shapes and be imperfect.
-    I want the dots to be seen from different angles, to have different styles and colors.
+        An abstract image showcasing the texture of a waffle pattern, repeating across the surface with soft lighting and realistic shadows.
+        No other objects or context — just the waffle texture filling the image. Make the picture varied, with different angles, textures and colors
     """
 
 if __name__ == "__main__":
-    for i in range(10):
-        n = 5
+    n = 5
+    concept_name = "waffled_cgpt"
+    iters = 10
+    calls_per_minute = 1
+
+    for i in range(iters):
+
         print(f"Generating batch {i}")
 
         response = openai.images.generate(
@@ -27,8 +30,8 @@ if __name__ == "__main__":
         )
 
         image_data = [base64.b64decode(response.data[i].b64_json) for i in range(n)]
-        save_images(image_data, concept_name=f"dotted_{i}")
+        LOGGER.save_images(image_data, concept_name=concept_name)
         print("Batch saved, going to sleep")
-        time.sleep(60)
+        time.sleep(60 / calls_per_minute)
 
     print("All images generated and saved.")

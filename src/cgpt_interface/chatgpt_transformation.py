@@ -5,7 +5,7 @@ from pathlib import Path
 
 import openai
 
-from src.loggers import save_images
+from src.loggers import LOGGER
 
 prompt = (
         "Remove the spots from the Dalmatian(s) in the image. "
@@ -48,7 +48,7 @@ def main(input_dir: Path):
             print("Waiting 12 seconds to respect rate limits...")
             time.sleep(12)  # ~5 requests per minute
 
-    save_images(image_data, concept_name=concept_name)
+    LOGGER(image_data, concept_name=concept_name)
 
 
 if __name__ == "__main__":
