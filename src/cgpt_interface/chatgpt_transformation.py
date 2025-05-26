@@ -8,7 +8,7 @@ import openai
 from src.loggers import LOGGER
 
 prompt = (
-        "Remove the spots from the Dalmatian(s) in the image. "
+        "Make the waffled parts be flat"
     )
 
 
@@ -48,7 +48,7 @@ def main(input_dir: Path):
             print("Waiting 12 seconds to respect rate limits...")
             time.sleep(12)  # ~5 requests per minute
 
-    LOGGER(image_data, concept_name=concept_name)
+    LOGGER.save_images(image_data, concept_name=concept_name)
 
 
 if __name__ == "__main__":
