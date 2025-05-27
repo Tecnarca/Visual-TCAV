@@ -14,21 +14,27 @@ classes:
           folder: zebra_unstriped
       - true_label: dotted
         generated:
-          # generate some concepts
+          - dotted_flux_2
+          - dotted_sd35_2
+          - dotted_cgpt_2
           - random
         concept_imputation:
           example: unstriped_zebra.png
           folder: zebra_unstriped
       - true_label: zigzagged
         generated:
-          # generate some concepts
+          - zigzagged_flux
+          - zigzagged_cgpt
+          - zigzagged_sd35
           - random
         concept_imputation:
           example: unstriped_zebra.png
           folder: zebra_unstriped
       - true_label: chequered
         generated:
-          # generate some concepts
+          - chequered_flux
+          - chequered_sd35
+          - chequered_cgpt
           - random
         concept_imputation:
           example: unstriped_zebra.png
@@ -36,26 +42,112 @@ classes:
   - name: dalmatian
     example_image: dalmatian.jpg
     concepts_groups:
-      - true_label: spotted
-        generated:
-          # generate some concepts
-          - random
-      - true_label: dotted
-        generated:
-          # generate some concepts
-          - random
-      - true_label: zigzagged
-        generated:
-          # generate some concepts
-          - random
-      - true_label: chequered
-        generated:
-          # generate some concepts
-          - random
       - true_label: striped
         generated:
-          # generate some concepts
+          - striped_flux
+          - striped_sd35
+          - striped_cgpt
+          - striped_cgpt_with_zebra_parts
           - random
+        concept_imputation:
+          example: undotted_dalmatian.png
+          folder: dalmatian_undotted
+      - true_label: dotted
+        generated:
+          - dotted_flux_2
+          - dotted_sd35_2
+          - dotted_cgpt_2
+          - random
+        concept_imputation:
+          example: undotted_dalmatian.png
+          folder: dalmatian_undotted
+      - true_label: zigzagged
+        generated:
+          - zigzagged_flux
+          - zigzagged_cgpt
+          - zigzagged_sd35
+          - random
+        concept_imputation:
+          example: undotted_dalmatian.png
+          folder: dalmatian_undotted
+      - true_label: chequered
+        generated:
+          - chequered_flux
+          - chequered_sd35
+          - chequered_cgpt
+          - random
+        concept_imputation:
+          example: undotted_dalmatian.png
+          folder: dalmatian_undotted
+  - name: waffle_iron
+    example_image: waffle_iron.jpg
+    concepts_groups:
+        - true_label: waffled
+          generated:
+            - waffled_flux
+            - waffled_sd35
+            - waffled_cgpt
+            - random
+          concept_imputation:
+            example: unwaffled_iron.png
+            folder: unwaffled_iron
+        - true_label: zigzagged
+          generated:
+            - zigzagged_flux
+            - zigzagged_cgpt
+            - zigzagged_sd35
+            - random
+          concept_imputation:
+            example: unwaffled_iron.png
+            folder: unwaffled_iron
+        - true_label: chequered
+          generated:
+            - chequered_flux
+            - chequered_sd35
+            - chequered_cgpt
+            - random
+          concept_imputation:
+            example: unwaffled_iron.png
+            folder: unwaffled_iron
+  - name: crossword_puzzle
+    example_image: crossword_puzzle.jpg
+    concepts_groups:
+      - true_label: waffled
+        generated:
+          - waffled_flux
+          - waffled_sd35
+          - waffled_cgpt
+          - random
+        concept_imputation:
+          example: crossword_puzzle_uncheckered.png
+          folder: crossword_puzzle_uncheckered
+      - true_label: zigzagged
+        generated:
+          - zigzagged_flux
+          - zigzagged_cgpt
+          - zigzagged_sd35
+          - random
+        concept_imputation:
+          example: crossword_puzzle_uncheckered.png
+          folder: crossword_puzzle_uncheckered
+      - true_label: chequered
+        generated:
+          - chequered_flux
+          - chequered_sd35
+          - chequered_cgpt
+          - random
+        concept_imputation:
+          example: crossword_puzzle_uncheckered.png
+          folder: crossword_puzzle_uncheckered
+      - true_label: dotted
+        generated:
+          - dotted_flux_2
+          - dotted_sd35_2
+          - dotted_cgpt_2
+          - random
+        concept_imputation:
+          example: crossword_puzzle_uncheckered.png
+          folder: crossword_puzzle_uncheckered
 
 models:
   - name: ResNet50V2

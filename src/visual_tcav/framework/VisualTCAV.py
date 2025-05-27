@@ -1222,6 +1222,7 @@ class GlobalVisualTCAV(VisualTCAV):
             np.arange(len(self.concepts)),
             [rf"$\mathit{{{concept}}}$" for concept in concept_names],
         )
+        plt.xticks(rotation=45)
         plt.grid(linewidth=0.3, zorder=1)
         if paper:
             plt.legend()
