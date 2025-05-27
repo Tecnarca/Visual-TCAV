@@ -6,15 +6,12 @@ from src.loggers import LOGGER
 
 # Prompts
 positive_prompt = """
-        An abstract image showcasing the texture of a waffle pattern, repeating across the surface with soft lighting and realistic shadows.
-        No other objects or context — just the waffle texture filling the image. Make the picture varied, with different angles, textures and colors
+        An image depicting chequered texture seen from different angles that can belong to different materials or objects.
     """
 
 if __name__ == "__main__":
-    n = 5
-    concept_name = "waffled_cgpt"
-    iters = 10
-    calls_per_minute = 1
+    concept_name = "chequered_cgpt"
+    iters = 1
 
     for i in range(iters):
 
@@ -23,7 +20,7 @@ if __name__ == "__main__":
         response = openai.images.generate(
             model="gpt-image-1",
             prompt=positive_prompt,
-            n=n,
+            n=5,
             size="1024x1024",
             output_format="png",
             quality="low",
@@ -32,6 +29,6 @@ if __name__ == "__main__":
         image_data = [base64.b64decode(response.data[i].b64_json) for i in range(n)]
         LOGGER.save_images(image_data, concept_name=concept_name)
         print("Batch saved, going to sleep")
-        time.sleep(60 / calls_per_minute)
+        time.sleep(max(6, int(60 / iters))+1)
 
     print("All images generated and saved.")
