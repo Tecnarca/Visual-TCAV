@@ -4,14 +4,12 @@ classes:
     concepts_groups:
       - true_label: dotted
         generated:
-          #- dotted_flux
-          #- dotted_sd35
-          - dotted_cgpt
-      - true_label: striped
-        generated:
-          #- striped_flux
-          #- striped_sd35
-          - striped_cgpt
+          - dotted_flux_2
+          - dotted_sd35_2
+          - dotted_cgpt_2
+        concept_imputation:
+          example: undotted_dalmatian.png
+          folder: undotted_dalmatian
 
 
 models:

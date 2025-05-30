@@ -51,7 +51,7 @@ classes:
           - random
         concept_imputation:
           example: undotted_dalmatian.png
-          folder: dalmatian_undotted
+          folder: undotted_dalmatian
       - true_label: dotted
         generated:
           - dotted_flux_2
@@ -60,7 +60,7 @@ classes:
           - random
         concept_imputation:
           example: undotted_dalmatian.png
-          folder: dalmatian_undotted
+          folder: undotted_dalmatian
       - true_label: zigzagged
         generated:
           - zigzagged_flux
@@ -69,7 +69,7 @@ classes:
           - random
         concept_imputation:
           example: undotted_dalmatian.png
-          folder: dalmatian_undotted
+          folder: undotted_dalmatian
       - true_label: chequered
         generated:
           - chequered_flux
@@ -78,7 +78,7 @@ classes:
           - random
         concept_imputation:
           example: undotted_dalmatian.png
-          folder: dalmatian_undotted
+          folder: undotted_dalmatian
   - name: waffle_iron
     example_image: waffle_iron.jpg
     concepts_groups:
