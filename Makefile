@@ -15,6 +15,14 @@ install: ## Install the dependencies from the lock file
 run: ## Run the visual tcav analysis
 	poetry run python -m src.visual_tcav.main $(CONFIG)
 
+.PHONY: run-all-classes
+
+run-all-classes:
+	@for file in configs/classes/*.yaml; do \
+		echo "Running: python -m src.visual_tcav.main $$file"; \
+		python -m src.visual_tcav.main $$file; \
+	done
+
 .PHONY: help
 help: ## Show the available commands
 	@echo "Available commands:"
