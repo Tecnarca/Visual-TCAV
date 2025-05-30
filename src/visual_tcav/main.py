@@ -1,6 +1,6 @@
 import argparse
 
-from config_loader import load_config
+from src.visual_tcav.config_loader import load_config
 
 from src.visual_tcav.framework.run_visual_tcav import (
     run_global_visual_tcav, run_local_visual_tcav)

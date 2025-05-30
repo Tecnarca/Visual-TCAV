@@ -41,7 +41,7 @@ def run_local_visual_tcav(test_image_filename, concept_group, model):
                 layer_name=layer,
             )
     print(f"Cosine similarities: {similarities}")
-    LOGGER.log_metrics(similarities)
+    LOGGER.log_metrics(similarities, test_image_filename)
 
 
 def run_global_visual_tcav(
@@ -59,4 +59,5 @@ def run_global_visual_tcav(
         concept_names=[concept_group.true_label] + concept_group.generated
     )
     global_visual_tcav.explain(cache_cav=True, cache_random=True)
+    global_visual_tcav.statsInfo() ## Info of the global run will be saved
     global_visual_tcav.plot()  ## Plots must be saved

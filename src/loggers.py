@@ -63,7 +63,7 @@ class ExperimentLogger:
 
             # Write header if file is new
             if is_new_file:
-                header = ["step", "key_1", "key_2", "value"]
+                header = ["step"]+[f"key{i}" for i in range(len(metrics))]+["value"]
                 writer.writerow(header)
 
             for key, val in metrics.items():
