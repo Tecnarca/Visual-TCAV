@@ -33,8 +33,8 @@ if __name__ == "__main__":
     df_all[["prefix", "suffix"]] = df_all["key_2"].apply(lambda x: pd.Series(split_prefix_suffix(x)))
     df_all = df_all[df_all["prefix"] != "unknown"]
 
-    filter = df_all.groupby('key0')['key_1'].max().unique()
-    df_all = df_all[df_all["key_1"].isin(filter)]
+    last_layers = df_all.groupby('key0')['key_1'].max().unique()
+    df_all = df_all[df_all["key_1"].isin(last_layers)]
 
     import math
 
