@@ -11,7 +11,7 @@ positive_prompt = """
 
 if __name__ == "__main__":
     concept_name = "chequered_cgpt"
-    iters = 1
+    iters = 10
 
     for i in range(iters):
 
@@ -26,9 +26,9 @@ if __name__ == "__main__":
             quality="low",
         )
 
-        image_data = [base64.b64decode(response.data[i].b64_json) for i in range(n)]
+        image_data = [base64.b64decode(response.data[i].b64_json) for i in range(5)]
         LOGGER.save_images(image_data, concept_name=concept_name)
         print("Batch saved, going to sleep")
-        time.sleep(max(6, int(60 / iters))+1)
+        time.sleep(60)
 
     print("All images generated and saved.")
