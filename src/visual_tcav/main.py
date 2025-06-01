@@ -31,6 +31,7 @@ def run_all_tcavs(object_class, concept_group, model):
 def main(config_path: str):
     config = load_config(config_path)
     LOGGER.log_config(config.model_dump())
+    LOGGER.log_text(f"Running on config: {config_path}")
     for object_class in config.classes:
         LOGGER.log_text(f"Using class: {object_class.name}")
         for concept_group in object_class.concepts_groups:
