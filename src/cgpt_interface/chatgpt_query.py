@@ -2,6 +2,7 @@ import base64
 import time
 
 import openai
+
 from src.loggers import LOGGER
 
 # Prompts
@@ -14,7 +15,6 @@ if __name__ == "__main__":
     iters = 10
 
     for i in range(iters):
-
         print(f"Generating batch {i}")
 
         response = openai.images.generate(

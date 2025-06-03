@@ -4,23 +4,23 @@ CHECK_DIRS= $(SRC_DIR)
 CONFIG ?= configs/config_minimal.yaml
 
 format: ## Format repository code
-	poetry run black $(CHECK_DIRS)
-	poetry run isort $(CHECK_DIRS)
+	uv run black $(CHECK_DIRS)
+	uv run isort $(CHECK_DIRS)
 
 .PHONY: install
 install: ## Install the dependencies from the lock file
-	poetry install -v
+	uv sync -v
 
 .PHONY: run
 run: ## Run the visual tcav analysis
-	poetry run python -m src.visual_tcav.main $(CONFIG)
+	uv run python -m src.visual_tcav.main $(CONFIG)
 
 .PHONY: run-all-classes
 
 run-all-classes:
 	@for file in configs/classes/*.yaml; do \
 		echo "Running: python -m src.visual_tcav.main $$file"; \
-		python -m src.visual_tcav.main $$file; \
+		make run $$file; \
 	done
 
 .PHONY: help

@@ -1,9 +1,12 @@
 import importlib
+import itertools
 from typing import Callable, List, Optional
 
 import yaml
-from pydantic import BaseModel, field_validator, Field
+from pydantic import (BaseModel, Field, field_serializer, field_validator,
+                      model_validator)
 
+from src.visual_tcav.bootstrap_concept import boostrap_concept
 from src.visual_tcav.framework.VisualTCAV import Model
 
 
@@ -16,6 +19,18 @@ class ConceptGroup(BaseModel):
     true_label: str
     generated: List[str]
     concept_imputation: ImputationTask = Field(default_factory=ImputationTask)
+    bootstrap: bool = False
+
+    @model_validator(mode="after")
+    def add_bootstrap_to_concepts(self) -> "ConceptGroup":
+        if self.bootstrap:
+            self.generated = list(
+                itertools.chain.from_iterable(
+                    boostrap_concept(concept) for concept in self.generated
+                )
+            )
+        return self
+
 
 class ClassConfig(BaseModel):
     name: str
@@ -41,6 +56,10 @@ class ModelConfig(BaseModel):
             raise ValueError(
                 f"Invalid preprocessing function path: {dotted_path}"
             ) from e
+
+    @field_serializer("preprocessing_function")
+    def serialize_preprocessing_function(self, preprocessing_function, _info):
+        return f"{preprocessing_function.__module__}.{preprocessing_function.__name__}"
 
     @property
     def model_object(self):

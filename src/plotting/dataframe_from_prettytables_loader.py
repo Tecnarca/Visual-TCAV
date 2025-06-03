@@ -1,5 +1,7 @@
 import re
+
 import pandas as pd
+
 
 def load_prettytables_as_dataframe(file_path):
     # Read the content of the file
@@ -15,7 +17,9 @@ def load_prettytables_as_dataframe(file_path):
     for line in lines:
         if "Model:" in line and "Class:" in line:
             if data_rows:
-                tables.append((current_model, current_class, current_examples, data_rows))
+                tables.append(
+                    (current_model, current_class, current_examples, data_rows)
+                )
                 data_rows = []
             parts = line.strip("|").split(";")
             current_model = parts[0].split(":")[1].strip()
@@ -29,11 +33,27 @@ def load_prettytables_as_dataframe(file_path):
                 parts[0] = current_concept
             # Parse mean and std
             mean_std_match = re.match(r"([\d.eE+-]+)\s*\+-\s*([\d.eE+-]+)", parts[2])
-            mean, std = (float(mean_std_match.group(1)), float(mean_std_match.group(2))) if mean_std_match else (None, None)
+            mean, std = (
+                (float(mean_std_match.group(1)), float(mean_std_match.group(2)))
+                if mean_std_match
+                else (None, None)
+            )
             # Parse CI
             ci_bounds = eval(parts[3])
             ci_low, ci_high = float(ci_bounds[0]), float(ci_bounds[1])
-            data_rows.append([current_model, current_class, current_examples, parts[0], parts[1], mean, std, ci_low, ci_high])
+            data_rows.append(
+                [
+                    current_model,
+                    current_class,
+                    current_examples,
+                    parts[0],
+                    parts[1],
+                    mean,
+                    std,
+                    ci_low,
+                    ci_high,
+                ]
+            )
 
     # Append the last table
     if data_rows:
@@ -41,5 +61,18 @@ def load_prettytables_as_dataframe(file_path):
 
     # Flatten all rows into one dataframe
     all_rows = [row for (_, _, _, table_rows) in tables for row in table_rows]
-    df = pd.DataFrame(all_rows, columns=["Model", "Class", "Examples", "Concept", "Layer", "Mean", "Std", "CI Low", "CI High"])
+    df = pd.DataFrame(
+        all_rows,
+        columns=[
+            "Model",
+            "Class",
+            "Examples",
+            "Concept",
+            "Layer",
+            "Mean",
+            "Std",
+            "CI Low",
+            "CI High",
+        ],
+    )
     return df

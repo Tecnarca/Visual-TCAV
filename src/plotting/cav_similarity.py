@@ -1,7 +1,9 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from src.loggers import REPO_ROOT_PATH, LOGGER
+import pandas as pd
+
+from src.loggers import LOGGER, REPO_ROOT_PATH
+
 
 def split_prefix_suffix(concept_name):
     if "_" in concept_name:
@@ -11,6 +13,7 @@ def split_prefix_suffix(concept_name):
     else:
         prefix, suffix = "unknown", concept_name
     return prefix, suffix
+
 
 if __name__ == "__main__":
     split_by_key0 = False
@@ -30,16 +33,22 @@ if __name__ == "__main__":
 
     df_all = pd.concat(all_dfs, ignore_index=True)
     df_all = df_all.dropna(subset=["value"]).copy()
-    df_all[["prefix", "suffix"]] = df_all["key_2"].apply(lambda x: pd.Series(split_prefix_suffix(x)))
+    df_all[["prefix", "suffix"]] = df_all["key_2"].apply(
+        lambda x: pd.Series(split_prefix_suffix(x))
+    )
     df_all = df_all[df_all["prefix"] != "unknown"]
 
-    last_layers = df_all.groupby('key0')['key_1'].max().unique()
+    last_layers = df_all.groupby("key0")["key_1"].max().unique()
     df_all = df_all[df_all["key_1"].isin(last_layers)]
 
     import math
 
     # Group the data
-    grouped = df_all.groupby(["key0", "prefix", "suffix"])["value"].agg(["mean", "std"]).fillna(0)
+    grouped = (
+        df_all.groupby(["key0", "prefix", "suffix"])["value"]
+        .agg(["mean", "std"])
+        .fillna(0)
+    )
     grouped["std"] *= 2
 
     if split_by_key0:
@@ -58,7 +67,9 @@ if __name__ == "__main__":
         total_width = 0.8
         bar_width = total_width / len(prefixes)
 
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 5 * n_rows), sharey=True)
+        fig, axes = plt.subplots(
+            n_rows, n_cols, figsize=(5 * n_cols, 5 * n_rows), sharey=True
+        )
         axes = axes.flatten()
 
         for idx, key0 in enumerate(key0_categories):
@@ -112,7 +123,9 @@ if __name__ == "__main__":
 
     else:
         # -------- AGGREGATED SINGLE PLOT --------
-        grouped_agg = df_all.groupby(["prefix", "suffix"])["value"].agg(["mean", "std"]).fillna(0)
+        grouped_agg = (
+            df_all.groupby(["prefix", "suffix"])["value"].agg(["mean", "std"]).fillna(0)
+        )
         grouped_agg["std"] *= 2
 
         prefixes = grouped_agg.index.get_level_values("prefix").unique()

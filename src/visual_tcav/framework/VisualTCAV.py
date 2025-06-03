@@ -1,9 +1,9 @@
 #####
-#	VisualTCAV
+# 	VisualTCAV
 #
-#	All rights reserved.
+# 	All rights reserved.
 #
-#	Main classes
+# 	Main classes
 #####
 
 
@@ -14,11 +14,13 @@
 # Do not generate "__pycache__" folder
 import sys
 from pathlib import Path
+
 from src.loggers import LOGGER, REPO_ROOT_PATH
 
 sys.dont_write_bytecode = True
 
 import os
+import platform
 from multiprocessing import dummy as multiprocessing
 
 import numpy as np
@@ -30,7 +32,6 @@ from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 from prettytable import PrettyTable
 from tqdm import tqdm
-import platform
 
 # Tensorflow
 # 0 = all messages are logged (default behavior)
@@ -151,7 +152,6 @@ class VisualTCAV:
 
     ##### Predict #####
     def predict(self, no_sort=False):
-
         # Checks
         if not isinstance(self, LocalVisualTCAV):
             raise Exception("Please use a local explainer")
@@ -184,7 +184,6 @@ class VisualTCAV:
 
     # Bind a model
     def _bindModel(self, model):
-
         # Folders and directories
         model.graph_path_dir = os.path.join(
             self.models_dir, model.model_name, model.graph_path_filename
@@ -216,7 +215,6 @@ class VisualTCAV:
 
     # Reshape a list of predictions
     def _sortTargetClasses(self, predictions, id_to_label, no_sort=False):
-
         # Reshape
         indexed_arr = list(enumerate(predictions))
         sorted_arr = (
@@ -246,12 +244,12 @@ class VisualTCAV:
         # VisualTCAV.tf_session.run(
         # Generating gradients
         # if self.model.model_name == "InceptionV3":
-        #	grads = np.array([])
-        #	for image in interpolated_images:
-        #		grads = np.append(grads,
-        #			# Grad points in the direction which INCREASES probability of class
-        #			self.model.model_wrapper.get_gradient_of_score(np.expand_dims(image, axis=0), layer_name, class_index)[0],
-        #		)
+        # 	grads = np.array([])
+        # 	for image in interpolated_images:
+        # 		grads = np.append(grads,
+        # 			# Grad points in the direction which INCREASES probability of class
+        # 			self.model.model_wrapper.get_gradient_of_score(np.expand_dims(image, axis=0), layer_name, class_index)[0],
+        # 		)
         # else:
         grads = self.model.model_wrapper.get_gradient_of_score(
             interpolated_images, layer_name, class_index
@@ -309,7 +307,6 @@ class VisualTCAV:
 
     # Function to compute the CAV given a concept & a layer
     def _compute_cavs(self, cache, concept_name, layer_name, random_acts):
-
         # If cached file exists
         cache_path = os.path.join(
             self.cache_dir,
@@ -392,7 +389,6 @@ class VisualTCAV:
 
 
 class LocalVisualTCAV(VisualTCAV):
-
     ##### Init #####
     def __init__(
         self,
@@ -446,7 +442,6 @@ class LocalVisualTCAV(VisualTCAV):
 
     ##### Explain #####
     def explain(self, cache_cav=True, cache_random=True, cav_only=False):
-
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -476,14 +471,12 @@ class LocalVisualTCAV(VisualTCAV):
             # 		concept's activations and the random's activations
             # 		cav.direction = GAP(cav.centroid0 - cav.centroid1) = GAP(cav.centroid0) - GAP(cav.centroid1)
             for concept_name in self.concepts:
-
                 # CAVs
                 concept_layer = self._compute_cavs(
                     cache_cav, concept_name, layer_name, random_acts
                 )
 
                 if not cav_only:
-
                     # Concept map
                     concept_layer.concept_map = tf.nn.relu(
                         tf.math.reduce_sum(
@@ -685,7 +678,6 @@ class LocalVisualTCAV(VisualTCAV):
 
     ##### Plot heatmaps and information #####
     def plot(self, paper=False):
-
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -701,7 +693,6 @@ class LocalVisualTCAV(VisualTCAV):
 
         # Iterate over the concepts
         for concept_name in self.concepts:
-
             # Escaping
             concept_name_esc = concept_name.replace("_", r"\_")
 
@@ -739,7 +730,6 @@ class LocalVisualTCAV(VisualTCAV):
 
             # Iterate over the layers
             for j, layer_name in enumerate(self.layers):
-
                 # Escaping
                 layer_description = "" if len(layer_name) > 11 else "layer"
                 layer_name_esc = layer_name.replace("_", r"\_")
@@ -854,11 +844,10 @@ class LocalVisualTCAV(VisualTCAV):
             # Show
             fig.tight_layout()
             LOGGER.log_figure(plt, self.concepts[0])
-            #plt.show()
+            # plt.show()
 
     ##### Get CAVs #####
     def getCAVs(self, layer_name, concept_name):
-
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -878,7 +867,6 @@ class LocalVisualTCAV(VisualTCAV):
 
 
 class GlobalVisualTCAV(VisualTCAV):
-
     ##### Init #####
     def __init__(
         self,
@@ -889,7 +877,6 @@ class GlobalVisualTCAV(VisualTCAV):
         *args,
         **kwargs,
     ):
-
         # Super
         super().__init__(**kwargs)
 
@@ -909,7 +896,6 @@ class GlobalVisualTCAV(VisualTCAV):
 
     ##### Explain #####
     def explain(self, cache_cav=True, cache_random=True):
-
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -1040,7 +1026,6 @@ class GlobalVisualTCAV(VisualTCAV):
 
                 # Again for each concept
                 for concept_name in self.concepts:
-
                     # Concept map
                     concept_map = tf.nn.relu(
                         tf.math.reduce_sum(
@@ -1233,11 +1218,10 @@ class GlobalVisualTCAV(VisualTCAV):
         plt.ylim(bottom=0, top=max(0.1, plt.ylim()[1]))
         plt.xlim(left=-0.5, right=0.5 + len(self.concepts) - 1)
         LOGGER.log_figure(plt, self.concepts[0])
-        #plt.show()
+        # plt.show()
 
     ##### Print stats and information #####
     def statsInfo(self):
-
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -1293,8 +1277,8 @@ class GlobalVisualTCAV(VisualTCAV):
 # Model class
 #####
 
-class Model:
 
+class Model:
     ##### Init #####
     def __init__(
         self,
@@ -1347,7 +1331,6 @@ class Model:
 
 
 class ConceptLayer:
-
     ##### Init #####
     def __init__(self):
         # Attributes
@@ -1364,7 +1347,6 @@ class ConceptLayer:
 
 
 class Cav:
-
     ##### Init #####
     def __init__(
         self, direction=None, centroid0=None, centroid1=None, concept_emblem=None
@@ -1383,8 +1365,8 @@ class Cav:
 # Prediction class
 #####
 
-class Prediction:
 
+class Prediction:
     ##### Init #####
     def __init__(self, class_name=None, class_index=None, confidence=None):
         # Attributes
@@ -1397,8 +1379,8 @@ class Prediction:
 # Predictions class
 #####
 
-class Predictions:
 
+class Predictions:
     ##### Init #####
     def __init__(self, predictions, test_image_filename, model_name):
         # Attributes
@@ -1429,8 +1411,8 @@ class Predictions:
 # Stat class
 #####
 
-class Stat:
 
+class Stat:
     ##### Init #####
     def __init__(self, attributions):
         # Attributes
@@ -1521,8 +1503,8 @@ colormap = CustomColormap(
 # KerasModelWrapper class
 #####
 
-class KerasModelWrapper:
 
+class KerasModelWrapper:
     ##### Init #####
     def __init__(self, model_path, labels_path, batch_size):
         self.model_name = None  # Model name
@@ -1539,7 +1521,9 @@ class KerasModelWrapper:
         )
 
         # Convnext does not work on GPU on MacM1
-        self.run_on_cpu = "convnext" in self.model.name and "Darwin" in platform.system()
+        self.run_on_cpu = (
+            "convnext" in self.model.name and "Darwin" in platform.system()
+        )
 
         # Fetch tensors
         self._get_layer_tensors()
@@ -1556,9 +1540,8 @@ class KerasModelWrapper:
 
     ##### Get the prediction(s) given one or more input(s) #####
     def get_predictions(self, imgs):
-
         # Feed the model with the inputs
-        with tf.device('/CPU:0' if self.run_on_cpu else ""):
+        with tf.device("/CPU:0" if self.run_on_cpu else ""):
             inputs = tf.cast(imgs, tf.float32)
             predictions = self.model(inputs)
         # Return the predictions
@@ -1578,7 +1561,7 @@ class KerasModelWrapper:
             q = i % self.batch_size
             if q == self.batch_size - 1 or i == len(imgs) - 1:
                 inputs = tf.cast(imgs[i - q : min(i + 1, len(imgs))], tf.float32)
-                with tf.device('/CPU:0' if self.run_on_cpu else ""):
+                with tf.device("/CPU:0" if self.run_on_cpu else ""):
                     output = self.simulated_layer_model[layer_name](inputs)
                 if len(feature_maps) == 0:
                     feature_maps = output
@@ -1598,7 +1581,7 @@ class KerasModelWrapper:
             self.simulated_logits_model[layer_name].layers[-1].activation = None
 
         # Feed the model with the inputs
-        with tf.device('/CPU:0' if self.run_on_cpu else ""):
+        with tf.device("/CPU:0" if self.run_on_cpu else ""):
             logits = self.simulated_logits_model[layer_name](feature_maps)
 
         # Return the logits
@@ -1622,7 +1605,7 @@ class KerasModelWrapper:
                     feature_maps[i - q : min(i + 1, len(feature_maps))], tf.float32
                 )
                 # Real batched computation
-                with tf.device('/CPU:0' if self.run_on_cpu else ""):
+                with tf.device("/CPU:0" if self.run_on_cpu else ""):
                     with tf.GradientTape() as tape:
                         tape.watch(inputs)
                         logits = self.simulated_logits_model[layer_name](inputs)

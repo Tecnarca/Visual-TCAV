@@ -1,17 +1,16 @@
 import csv
 import json
-from pathlib import Path
+import types
 from datetime import datetime
-from typing import Dict, Any, Optional, Iterable
+from pathlib import Path
+from typing import Any, Dict, Iterable, Optional
 
+import matplotlib.pyplot as plt
+import numpy as np
 import yaml
 from prettytable import PrettyTable
-import types
-import numpy as np
-import matplotlib.pyplot as plt
 
 REPO_ROOT_PATH = Path(__file__).parent.parent
-
 
 
 class ExperimentLogger:
@@ -55,15 +54,17 @@ class ExperimentLogger:
 
         print(f"[Logger] Saved config to {self.config_path.name}")
 
-    def log_metrics(self, metrics: Dict[Iterable[str], Any], step: Optional[int] = None):
+    def log_metrics(
+        self, metrics: Dict[Iterable[str], Any], step: Optional[int] = None
+    ):
         is_new_file = not self.metrics_csv_path.exists()
 
-        with open(self.metrics_csv_path, mode='a', newline='') as f:
+        with open(self.metrics_csv_path, mode="a", newline="") as f:
             writer = csv.writer(f)
 
             # Write header if file is new
             if is_new_file:
-                header = ["step"]+[f"key{i}" for i in range(len(metrics))]+["value"]
+                header = ["step"] + [f"key{i}" for i in range(len(metrics))] + ["value"]
                 writer.writerow(header)
 
             for key, val in metrics.items():
@@ -80,7 +81,12 @@ class ExperimentLogger:
 
         print(f"[Logger] Logged metrics to {self.metrics_csv_path.name}")
 
-    def log_table(self, table: PrettyTable, filename: str = "tables.txt", title: Optional[str] = None):
+    def log_table(
+        self,
+        table: PrettyTable,
+        filename: str = "tables.txt",
+        title: Optional[str] = None,
+    ):
         table_path = self.experiment_path / filename
 
         with open(table_path, "a") as f:
@@ -108,7 +114,6 @@ class ExperimentLogger:
         output_folder = images_dir / concept_name
         output_folder.mkdir(parents=True, exist_ok=True)
         for i, image in enumerate(images):
-
             count = 1
             output_path = output_folder / f"{concept_name}_{count}.png"
 
@@ -124,7 +129,6 @@ class ExperimentLogger:
 
         print(f"[Logger] Saved image(s) to {output_folder}")
 
-
     def log_text(self, text: str):
         with open(self.log_path, "a") as f:
             f.write(text.strip() + "\n")
@@ -137,7 +141,7 @@ class ExperimentLogger:
         summary = {
             "path": str(self.experiment_path.resolve()),
             "config": {},
-            "metrics": []
+            "metrics": [],
         }
         if self.config_path.exists():
             summary["config"] = json.loads(self.config_path.read_text())
@@ -148,4 +152,6 @@ class ExperimentLogger:
         return summary
 
 
-LOGGER = ExperimentLogger(root_dir=REPO_ROOT_PATH / "experiments", base_name="test_runs")
+LOGGER = ExperimentLogger(
+    root_dir=REPO_ROOT_PATH / "experiments", base_name="test_runs"
+)

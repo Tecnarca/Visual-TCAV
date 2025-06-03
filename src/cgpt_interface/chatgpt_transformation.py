@@ -1,15 +1,13 @@
+import argparse
 import base64
 import time
-import argparse
 from pathlib import Path
 
 import openai
 
 from src.loggers import LOGGER
 
-prompt = (
-        "Make the waffled parts be flat"
-    )
+prompt = "Make the waffled parts be flat"
 
 
 def is_image_file(file: Path) -> bool:
@@ -31,7 +29,6 @@ def edit_image(image_path: Path, prompt: str) -> bytes:
 
 
 def main(input_dir: Path):
-
     concept_name = input_dir.name + "_imputation"
     image_data = []
     image_files = [f for f in input_dir.glob("*") if is_image_file(f)]
@@ -59,6 +56,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not args.input_dir.exists() or not args.input_dir.is_dir():
-        raise ValueError(f"Input path {args.input_dir.resolve()} is not a valid directory.")
+        raise ValueError(
+            f"Input path {args.input_dir.resolve()} is not a valid directory."
+        )
 
     main(args.input_dir)

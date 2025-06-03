@@ -1,7 +1,7 @@
 from src.loggers import LOGGER
 from src.visual_tcav.framework.VisualTCAV import (GlobalVisualTCAV,
-                                                     LocalVisualTCAV,
-                                                     cosine_similarity)
+                                                  LocalVisualTCAV,
+                                                  cosine_similarity)
 
 
 def get_cosine_similarity(
@@ -44,9 +44,7 @@ def run_local_visual_tcav(test_image_filename, concept_group, model):
     LOGGER.log_metrics(similarities, test_image_filename)
 
 
-def run_global_visual_tcav(
-    test_images_folder, object_class, concept_group, model
-):
+def run_global_visual_tcav(test_images_folder, object_class, concept_group, model):
     global_visual_tcav = GlobalVisualTCAV(
         test_images_folder=test_images_folder,
         target_class=object_class.name,
@@ -59,5 +57,5 @@ def run_global_visual_tcav(
         concept_names=[concept_group.true_label] + concept_group.generated
     )
     global_visual_tcav.explain(cache_cav=True, cache_random=True)
-    global_visual_tcav.statsInfo() ## Info of the global run will be saved
+    global_visual_tcav.statsInfo()  ## Info of the global run will be saved
     global_visual_tcav.plot()  ## Plots must be saved

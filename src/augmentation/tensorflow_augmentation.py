@@ -1,10 +1,10 @@
+import argparse
+from pathlib import Path
 from random import uniform
 
 import tensorflow as tf
-import argparse
-from pathlib import Path
 from scipy.ndimage import rotate as scipy_rotate
-from tensorflow.keras.utils import img_to_array, array_to_img, load_img
+from tensorflow.keras.utils import array_to_img, img_to_array, load_img
 
 
 def advanced_augment(image):
@@ -17,7 +17,9 @@ def advanced_augment(image):
 
     # Random rotation
     angle = uniform(-45, 45)  # degrees
-    image_np = scipy_rotate(image_np, angle=angle, axes=(0, 1), reshape=False, mode='nearest')
+    image_np = scipy_rotate(
+        image_np, angle=angle, axes=(0, 1), reshape=False, mode="nearest"
+    )
 
     # Back to tensor
     image = tf.convert_to_tensor(image_np, dtype=tf.float32)
@@ -61,7 +63,9 @@ def main(input_folder, num_augmented):
         print("No images found.")
         return
 
-    print(f"Augmenting {len(image_paths)} images with {num_augmented} variations each...")
+    print(
+        f"Augmenting {len(image_paths)} images with {num_augmented} variations each..."
+    )
 
     for img_path in image_paths:
         augment_and_save(img_path, output_folder, num_augmented)
@@ -72,7 +76,9 @@ def main(input_folder, num_augmented):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="TensorFlow-based image augmenter.")
     parser.add_argument("folder", help="Path to input image folder")
-    parser.add_argument("--num", type=int, default=10, help="Number of augmented images per original")
+    parser.add_argument(
+        "--num", type=int, default=10, help="Number of augmented images per original"
+    )
     args = parser.parse_args()
 
     main(args.folder, args.num)
