@@ -74,8 +74,8 @@ if __name__ == "__main__":
 
     Please have another check at this script before making it go live.
     """
-    attributions = load_dataframe_from_experiment_set("2")
-    similarities = load_metrics_from_experiment_set("2")
+    attributions = load_dataframe_from_experiment_set("3")
+    similarities = load_metrics_from_experiment_set("3")
 
     mask_false_attributions = attributions["Concept"].isin(
         similarities["Concept"].unique()
@@ -107,6 +107,7 @@ if __name__ == "__main__":
     )
     plotting_frame = joined[joined["Layer"].isin(last_layers)]
     plotting_frame = plotting_frame.copy()
+    plotting_frame['Concept'] = plotting_frame['Concept'].str.split('_bootstrap_').str[0]
     plotting_frame[["mimick", "LLM"]] = plotting_frame["Concept"].str.split(
         "_", n=1, expand=True
     )
