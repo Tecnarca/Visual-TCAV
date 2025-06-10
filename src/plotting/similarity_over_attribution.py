@@ -65,15 +65,6 @@ def load_metrics_from_experiment_set(set_prefix: str) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    """
-    WARNING: this script can't yet handle the concept of "Multiple runs".
-    You probably need to add it as a dimension to:
-     - generated_attributions_on_real_concept
-     - similarities
-     - true_attributions
-
-    Please have another check at this script before making it go live.
-    """
     attributions = load_dataframe_from_experiment_set("3")
     similarities = load_metrics_from_experiment_set("3")
 
@@ -176,7 +167,7 @@ if __name__ == "__main__":
                 )
 
             # Aesthetics
-            ax.set_xlim(0, 1.1)
+            ax.set_xlim(0, 1.05)
             ax.set_ylim(0, max(class_group.Mean.max(), true_df.Mean.max()) + 0.05)
             for spine in ax.spines.values():
                 spine.set_visible(True)
@@ -184,7 +175,7 @@ if __name__ == "__main__":
                 spine.set_edgecolor("black")
             ax.set_title(f"Model: {model}\nMimick: {mimick}")
             ax.set_xlabel("Similarity")
-            ax.set_ylabel("Mean")
+            ax.set_ylabel("Attribution")
 
         # Remove unused subplots
         total_plots = n_rows * n_cols
