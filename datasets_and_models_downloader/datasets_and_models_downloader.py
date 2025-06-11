@@ -1,4 +1,7 @@
 # Imports
+import zipfile
+from pathlib import Path
+
 if __name__ == "__main__":
 	#import os
 	import random
@@ -39,6 +42,7 @@ visual_tcav_dir_path = path.join(dir_path, "../VisualTCAV")
 
 visual_tcav_cache_dir_path = path.join(visual_tcav_dir_path, "cache")
 visual_tcav_cache_dtd_dir_path = path.join(visual_tcav_cache_dir_path, "dtd")
+visual_tcav_cache_fmd_dir_path = path.join(visual_tcav_cache_dir_path, "fmd")
 
 visual_tcav_concept_images_dir_path = path.join(visual_tcav_dir_path, "concept_images")
 visual_tcav_concept_images_random_dir_path = path.join(visual_tcav_concept_images_dir_path, "random")
@@ -345,3 +349,36 @@ if __name__ == "__main__":
 						dtd_f.extract(tarinfo, visual_tcav_concept_images_dtd_dir_path)
 
 	print("Done!")
+
+def download_and_unzip_fmd(url: str, extract_to: Path):
+	# Temporary zip file path
+	zip_path = Path(visual_tcav_cache_fmd_dir_path) / "FMD.zip"
+
+	if not zip_path.exists():
+		print(f"Downloading from {url}...")
+		response = requests.get(url, stream=True)
+		response.raise_for_status()
+		zip_path.parent.mkdir(parents=True, exist_ok=True)
+
+		with open(zip_path, "wb") as f:
+			for chunk in response.iter_content(chunk_size=8192):
+				f.write(chunk)
+
+	print("Extracting contents...")
+	extract_to.mkdir(parents=True, exist_ok=True)
+	with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+		# Filter for files inside the "image/" folder
+		for member in zip_ref.namelist():
+			if member.startswith("image/") and not member.endswith("/"):
+				# Extract and flatten path to target directory
+				target_path = extract_to / Path(member).relative_to("image")
+				target_path.parent.mkdir(parents=True, exist_ok=True)
+				with zip_ref.open(member) as source_file, open(target_path, "wb") as target_file:
+					target_file.write(source_file.read())
+
+
+if __name__ == "__main__":
+	download_and_unzip_fmd(
+		"https://people.csail.mit.edu/celiu/CVPR2010/FMD/FMD.zip",
+		Path(visual_tcav_concept_images_dir_path)
+	)

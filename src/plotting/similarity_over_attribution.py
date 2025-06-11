@@ -98,7 +98,9 @@ if __name__ == "__main__":
     )
     plotting_frame = joined[joined["Layer"].isin(last_layers)]
     plotting_frame = plotting_frame.copy()
-    plotting_frame['Concept'] = plotting_frame['Concept'].str.split('_bootstrap_').str[0]
+    plotting_frame["Concept"] = (
+        plotting_frame["Concept"].str.split("_bootstrap_").str[0]
+    )
     plotting_frame[["mimick", "LLM"]] = plotting_frame["Concept"].str.split(
         "_", n=1, expand=True
     )
