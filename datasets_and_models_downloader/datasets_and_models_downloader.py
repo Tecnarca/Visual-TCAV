@@ -25,13 +25,22 @@ n_single_images_per_class = 5
 n_random_images = 500
 imagenet_classes = [
 	"n02391049", # Zebra
- 	#'n03000134'
 	"n03530642", # Honeycomb
 	"n09218315", # Honeycomb
 	"n04542943", # Waffle iron
 	"n06785654", # Crossword puzzle
 	"n02110341", # Dalmatian
 	"n01440764", # Tench
+	"n02823750", # beer glass
+	"n03028079", # church
+	"n03445777", # golf ball
+	"n02128385", # leopard
+	"n04275548", # spider web
+	"n04479046", # trench coat
+	"n04461696", # i could not find "taxi", so i added it
+	#"n02386224", # hackney (black taxi)
+	#"n02382204", # hack
+	#"n02382132", # hack
 ]
 
 
@@ -111,14 +120,11 @@ if __name__ == "__main__":
 
 	convnext = keras.applications.ConvNeXtBase(include_top=True, include_preprocessing=False, weights="imagenet", input_tensor=None, input_shape=None, pooling=None, classes=1000, classifier_activation="softmax")
 	convnext.compile(loss='mse')
-	convnext.save(path.join(visual_tcav_models_convnext_dir_path, "ConvNeXt-architecture-and-weights-compiled"))
+	convnext.save(path.join(visual_tcav_models_convnext_dir_path, "ConvNeXt-architecture-and-weights-compiled.keras"))
 	convnext_classes_file = open(path.join(visual_tcav_models_convnext_dir_path, "ConvNeXt-imagenet-classes.txt"), "w")
 	for cl in keras.applications.convnext.decode_predictions(np.array([[i for i in range(1000)]]), 1000)[0][::-1]:
 		convnext_classes_file.write(cl[1] + "\n")
 	convnext_classes_file.close()
-
-	print("Done!")
-	exit()
 
 
 # Images download
