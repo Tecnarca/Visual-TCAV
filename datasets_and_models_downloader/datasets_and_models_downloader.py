@@ -38,6 +38,7 @@ imagenet_classes = [
 	"n04275548", # spider web
 	"n04479046", # trench coat
 	"n04461696", # i could not find "taxi", so i added it
+	"n04326547", # stone wall
 	#"n02386224", # hackney (black taxi)
 	#"n02382204", # hack
 	#"n02382132", # hack
