@@ -73,6 +73,13 @@ def run_concept_stripping_from_df_batched(
             tqdm.write(f"[done] Nothing left to edit for Class='{cls}' Concept='{concept}'.")
             continue
 
+        # ✅ Skip if pending < 10
+        if len(pending) < 10:
+            tqdm.write(
+                f"[skip-small] Class='{cls}' Concept='{concept}' has only {len(pending)} pending (<10). Skipping batch."
+            )
+            continue
+
         # Create a clean staging directory for this batch with symlinks to 'pending'
         stage_dir = staging_root / f"{cls}__{concept}"
         if stage_dir.exists():
@@ -111,7 +118,7 @@ def run_concept_stripping_from_df_batched(
             sys.executable,
             str(script_path),
             "--prompt", prompt,
-            "--model", "gpt-image-1",
+            "--model", "gpti1",
             "--edit_image_path", str(stage_dir),
             "--output_dir", str(concept_out),
         ]

@@ -7,17 +7,80 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, List
+from typing import List
 
 import pandas as pd
 from tqdm import tqdm
-from huggingface_hub import login as hf_login
 
 # ======== Config ========
-MODELS: List[str] = ["flux", "stable_diffusion"]#, "gpt-image-1"]
+MODELS: List[str] = ["flux", "sd35"]
+#MODELS: List[str] = ["gpti1"]
 TARGET_PER_CONCEPT = 200
 FNAME_RE_CACHE = {}  # cache compiled regex per model
 # ========================
+
+# ===== NEW: estimation helpers =====
+from collections import defaultdict
+
+def _have_count_like_runtime(target_dir: Path, model: str) -> int:
+    """
+    Mirrors the runtime's notion of 'already' images:
+    the maximum index among files named {model}_{N}.png (not the count).
+    """
+    return _max_existing_index(target_dir, model)
+
+def estimate_missing(df: pd.DataFrame, output_root: Path) -> pd.DataFrame:
+    """
+    Build a per-(Concept, Model) estimate with columns:
+    Concept, Model, Have, Need (Need = max(0, TARGET_PER_CONCEPT - Have)).
+    """
+    rows = []
+    for _, row in df.iterrows():
+        concept = str(row["Concept"])
+        for model in MODELS:
+            target_dir = output_root / f"{concept}_{model}"
+            have = _have_count_like_runtime(target_dir, model)
+            need = max(0, TARGET_PER_CONCEPT - have)
+            rows.append({"Concept": concept, "Model": model, "Have": have, "Need": need})
+    return pd.DataFrame(rows)
+
+def print_estimate_summary(est_df: pd.DataFrame):
+    """
+    Pretty-print a compact summary:
+    - Totals per model
+    - Optional head of per-concept breakdown (sorted by 'Need' desc)
+    """
+    if est_df.empty:
+        print("[estimate] No concepts to estimate.")
+        return
+
+    # Totals per model
+    model_totals = (est_df.groupby("Model")["Need"]
+                    .sum()
+                    .sort_values(ascending=False))
+    print("\n====== Missing Images: Totals per Model ======")
+    for model, need_sum in model_totals.items():
+        print(f"{model:>12}: {need_sum}")
+
+    # Overall totals
+    grand_total = int(model_totals.sum())
+    concepts = est_df["Concept"].nunique()
+    print("==============================================")
+    print(f" Concepts: {concepts}")
+    print(f"   Target: {TARGET_PER_CONCEPT} per (Concept, Model)")
+    print(f"   Missing (grand total): {grand_total}")
+
+    # Per-concept top needs (optional, helpful when many concepts)
+    print("\n-- Top missing (by Concept, per Model) --")
+    top = (est_df.sort_values(["Need", "Concept", "Model"], ascending=[False, True, True])
+                 .query("Need > 0"))
+    # Limit to a reasonable preview if large
+    preview_rows = min(25, len(top))
+    if preview_rows:
+        print(top.head(preview_rows).to_string(index=False))
+    else:
+        print("All complete 🎉")
+# ===== END new estimation helpers =====
 
 
 @dataclass
@@ -25,74 +88,6 @@ class GenTask:
     concept: str
     positive: str
     negative: str
-
-
-def ensure_hf_login():
-    """Login to Hugging Face using HF_TOKEN env var (same as your inner script)."""
-    token = os.getenv("HF_TOKEN")
-    if not token:
-        raise RuntimeError("HF_TOKEN not set in environment; required for model downloads.")
-    try:
-        hf_login(token=token)
-        print("[hf] Logged in to Hugging Face.")
-    except Exception as e:
-        raise RuntimeError(f"Failed to login to Hugging Face: {e}") from e
-
-
-def _run(cmd: list[str]) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-
-def limit_gpu_power_to_ratio(ratio: float = 0.66):
-    """
-    Best-effort: set each NVIDIA GPU's power limit to `ratio * max_limit`.
-    Requires admin privileges / NVSMI permissions. If it fails, prints a warning and continues.
-    """
-    # Verify nvidia-smi exists
-    check = _run(["which", "nvidia-smi"])
-    if check.returncode != 0:
-        print("[gpu] nvidia-smi not found; skipping GPU power limit.")
-        return
-
-    # Query GPU indices and power limits
-    q = _run([
-        "nvidia-smi",
-        "--query-gpu=index,power.min_limit,power.limit,power.max_limit",
-        "--format=csv,noheader,nounits",
-    ])
-    if q.returncode != 0:
-        print(f"[gpu] Could not query power limits: {q.stderr.strip()}")
-        return
-
-    lines = [ln.strip() for ln in q.stdout.splitlines() if ln.strip()]
-    if not lines:
-        print("[gpu] No GPUs detected; skipping power limit.")
-        return
-
-    # Try enabling persistence mode (optional but often recommended)
-    pm = _run(["nvidia-smi", "-pm", "1"])
-    if pm.returncode != 0:
-        print(f"[gpu] Could not enable persistence mode (continuing): {pm.stderr.strip()}")
-
-    for ln in lines:
-        try:
-            idx_s, min_s, cur_s, max_s = [x.strip() for x in ln.split(",")]
-            idx = int(idx_s)
-            min_w = float(min_s)
-            max_w = float(max_s)
-            target = max(min_w, min(max_w, round(max_w * ratio, 1)))
-        except Exception:
-            print(f"[gpu] Skipping unparsable line: {ln}")
-            continue
-
-        # Attempt to set limit
-        setp = _run(["nvidia-smi", "-i", str(idx), "-pl", str(target)])
-        if setp.returncode == 0:
-            print(f"[gpu] GPU {idx}: set power limit to {target} W (~{int(ratio*100)}% of max {max_w} W).")
-        else:
-            print(f"[gpu] GPU {idx}: failed to set power limit to {target} W. "
-                  f"(Need admin privileges or driver support) — {setp.stderr.strip()}")
-
 
 def _compiled_name_re(model: str):
     """Match files like 'flux_1.png' or 'stable_diffusion_42.png' or 'gpt-image-1_200.png'."""
@@ -198,7 +193,7 @@ def generate_from_df(
                 f"[run] Concept='{concept}' Model='{model}' -> have={already}, need={remaining}, out={target_dir}"
             )
 
-            stage_dir = staging_root / f"{concept}__{model}"
+            stage_dir = staging_root / f"{concept}_{model}"
             _clean_dir(stage_dir)
             stage_dir.mkdir(parents=True, exist_ok=True)
 
@@ -265,22 +260,14 @@ def main():
         default=Path(".staging_generations"),
         help="Temporary staging directory (default: .staging_generations).",
     )
-    parser.add_argument(
-        "--no_gpu_limit",
-        action="store_true",
-        help="Skip setting GPU power limit (useful if you lack permissions).",
-    )
     args = parser.parse_args()
-
-    # 1) HF login up front (fail fast if token missing)
-    ensure_hf_login()
-
-    # 2) Best-effort GPU power limit to 66%
-    if not args.no_gpu_limit:
-        limit_gpu_power_to_ratio(0.66)
 
     # 3) Load DF and generate
     df = pd.read_csv(args.df_csv)
+
+    est_df = estimate_missing(df=df, output_root=args.output_root)
+    print_estimate_summary(est_df)
+
     generate_from_df(
         script_path=args.script_path,
         df=df,
