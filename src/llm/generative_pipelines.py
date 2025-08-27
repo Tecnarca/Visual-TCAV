@@ -76,11 +76,12 @@ def save_or_show(images, output_dir: Path | None, prefix: str):
 
 # ---------- GPT image wrapper with adaptive backoff ----------
 class GPTImageClient:
-    def __init__(self, max_retries: int = 5):
+    def __init__(self, max_retries: int = 3):
         self.max_retries = max_retries
 
     def generate(self, prompt: str, n: int):
-        attempts = 0
+        attempts_generic = 0
+        moderation_retry_used = False
         while True:
             try:
                 resp = openai.images.generate(
@@ -91,14 +92,25 @@ class GPTImageClient:
                     output_format="png",
                     quality="low",
                 )
+                print(f"[{hhmm()}] Revised prompt: {resp.data[0].revised_prompt}")
                 return [Image.open(io.BytesIO(base64.b64decode(d.b64_json))) for d in resp.data]
             except (openai.BadRequestError, openai.RateLimitError) as e:
-                attempts += 1
-                if attempts > self.max_retries:
+                # Moderation handling (BadRequest only)
+                if isinstance(e, openai.BadRequestError) and is_moderation_block(e):
+                    if moderation_retry_used:
+                        log(f"[{hhmm()}] Bad Request (moderation) again → skipping")
+                        return None
+                    log(f"[{hhmm()}] Bad Request (moderation) → retrying once…")
+                    moderation_retry_used = True
+                    continue
+
+                # Adaptive backoff for pacing/limit errors
+                attempts_generic += 1
+                if attempts_generic > self.max_retries:
                     raise
                 wait_s = parse_retry_after_seconds(e)
                 label = error_label(e)
-                log(f"[GEN] {label} → wait {wait_s}s then retry (attempt {attempts}/{self.max_retries})")
+                log(f"[{hhmm()}] {label} → wait {wait_s}s then retry (attempt {attempts_generic}/{self.max_retries})")
                 time.sleep(wait_s)
 
     def edit(self, image_path: Path, prompt: str):
@@ -183,8 +195,12 @@ class ImageGenerator:
             all_imgs = []
             while remaining > 0:
                 b = min(5, remaining)
-                all_imgs.extend(self.pipeline.generate(prompt, b))
+                gen = self.pipeline.generate(prompt, b)
+                if gen is None:  # moderation blocked twice → skip
+                    continue
+                all_imgs.extend(gen)
                 remaining -= b
+                print(f"[{hhmm()}] Generated {b}/{len(all_imgs)}")
             save_or_show(all_imgs, output_dir, prefix="gpti1")
             return
 
