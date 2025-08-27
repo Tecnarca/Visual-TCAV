@@ -14,7 +14,7 @@ import torch
 from PIL import Image
 from diffusers import StableDiffusion3Pipeline, FluxPipeline
 from huggingface_hub import login
-
+from tqdm import tqdm
 
 # ---------- Auth ----------
 hf_token = os.getenv("HF_TOKEN")
@@ -92,7 +92,8 @@ class GPTImageClient:
                     output_format="png",
                     quality="low",
                 )
-                print(f"[{hhmm()}] Revised prompt: {resp.data[0].revised_prompt}")
+                if resp.data[0].revised_prompt is not None:
+                    print(f"[{hhmm()}] Revised prompt: {resp.data[0].revised_prompt}")
                 return [Image.open(io.BytesIO(base64.b64decode(d.b64_json))) for d in resp.data]
             except (openai.BadRequestError, openai.RateLimitError) as e:
                 # Moderation handling (BadRequest only)
@@ -193,14 +194,15 @@ class ImageGenerator:
         if self.model == "gpti1":
             remaining = num_images
             all_imgs = []
-            while remaining > 0:
-                b = min(5, remaining)
-                gen = self.pipeline.generate(prompt, b)
-                if gen is None:  # moderation blocked twice → skip
-                    continue
-                all_imgs.extend(gen)
-                remaining -= b
-                print(f"[{hhmm()}] Generated {len(all_imgs)}, {remaining} remaining")
+            with tqdm(total=num_images, desc="Generating images") as pbar:
+                while remaining > 0:
+                    b = min(5, remaining)
+                    gen = self.pipeline.generate(prompt, b)
+                    if gen is None:  # moderation blocked twice → skip
+                        continue
+                    all_imgs.extend(gen)
+                    remaining -= b
+                    pbar.update(len(gen))  # increment by number actually generated
             save_or_show(all_imgs, output_dir, prefix="gpti1")
             return
 

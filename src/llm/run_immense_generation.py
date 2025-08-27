@@ -13,8 +13,7 @@ import pandas as pd
 from tqdm import tqdm
 
 # ======== Config ========
-MODELS: List[str] = ["flux", "sd35"]
-#MODELS: List[str] = ["gpti1"]
+MODELS: List[str] = ["flux", "sd35", "gpti1"]
 TARGET_PER_CONCEPT = 200
 FNAME_RE_CACHE = {}  # cache compiled regex per model
 # ========================
@@ -75,7 +74,7 @@ def print_estimate_summary(est_df: pd.DataFrame):
     top = (est_df.sort_values(["Need", "Concept", "Model"], ascending=[False, True, True])
                  .query("Need > 0"))
     # Limit to a reasonable preview if large
-    preview_rows = min(25, len(top))
+    preview_rows = len(top)
     if preview_rows:
         print(top.head(preview_rows).to_string(index=False))
     else:
