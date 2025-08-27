@@ -200,7 +200,7 @@ class ImageGenerator:
                     continue
                 all_imgs.extend(gen)
                 remaining -= b
-                print(f"[{hhmm()}] Generated {b}/{len(all_imgs)}")
+                print(f"[{hhmm()}] Generated {len(all_imgs)}, {remaining} remaining")
             save_or_show(all_imgs, output_dir, prefix="gpti1")
             return
 
