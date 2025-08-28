@@ -845,6 +845,7 @@ class LocalVisualTCAV(VisualTCAV):
             fig.tight_layout()
             LOGGER.log_figure(plt, self.concepts[0])
             # plt.show()
+            plt.close(fig)
 
     ##### Get CAVs #####
     def getCAVs(self, layer_name, concept_name):
@@ -1516,9 +1517,14 @@ class KerasModelWrapper:
 
         # Batching
         self.batch_size = batch_size
-        self.model = tf.keras.models.load_model(
-            model_path, custom_objects={"mse": MeanSquaredError()}
-        )
+        try:
+            self.model = tf.keras.models.load_model(
+                model_path, custom_objects={"mse": MeanSquaredError()}
+            )
+        except ValueError:
+            self.model = tf.keras.models.load_model(
+                model_path+".keras", custom_objects={"mse": MeanSquaredError()}
+            )
 
         # Convnext does not work on GPU on MacM1
         self.run_on_cpu = (
@@ -1752,6 +1758,13 @@ class ImageActivationGenerator:
             for d in tf.io.gfile.listdir(concept_dir)
             if is_image(d)
         ]
+        if len(img_paths) == 0 and "real_images" in tf.io.gfile.listdir(concept_dir):
+            concept_dir = os.path.join(concept_dir, "real_images")
+            img_paths = [
+                os.path.join(concept_dir, d)
+                for d in tf.io.gfile.listdir(concept_dir)
+                if is_image(d)
+            ]
         # Load the images with the filenames
         imgs = self._load_images_from_files(
             img_paths,

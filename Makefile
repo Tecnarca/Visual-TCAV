@@ -9,7 +9,7 @@ format: ## Format repository code
 
 .PHONY: install
 install: ## Install the dependencies from the lock file
-	uv sync -v
+	uv sync -v --prerelease=allow
 
 .PHONY: run
 run: ## Run the visual tcav analysis
@@ -17,10 +17,13 @@ run: ## Run the visual tcav analysis
 
 .PHONY: run-all-classes
 
+FILES := $(wildcard configs/single_classes/*.yaml)
+
 run-all-classes:
-	@for file in configs/classes/*.yaml; do \
-		echo "Running: python -m src.visual_tcav.main $$file"; \
-		make run $$file; \
+	@for file in $(FILES); do \
+	  base=$$(basename "$$file" .yaml); \
+	  echo "Running: uv run python -m src.visual_tcav.main \"$$file\" --base-name \"$$base\""; \
+	  uv run python -m src.visual_tcav.main "$$file" --base-name "$$base"; \
 	done
 
 .PHONY: help

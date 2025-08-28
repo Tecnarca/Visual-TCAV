@@ -5,7 +5,7 @@ from pathlib import Path
 from src.loggers import REPO_ROOT_PATH
 
 
-def boostrap_concept(concept_name, n=5, ratio=1):
+def boostrap_concept(concept_name, n=3, ratio=1):
     """
     Create `n` bootstrap folders from the original `folder`, sampling files with replacement.
 
