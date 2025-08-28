@@ -170,6 +170,7 @@ def build_yaml_for_class(
         group = {
             "true_label": concept,
             "generated": generated,
+            "bootstrap": True,
         }
         if example_candidate and folder_name:
             group["concept_imputation"] = {
@@ -244,25 +245,25 @@ def main():
     parser.add_argument(
         "--csv",
         type=Path,
-        default=Path("/src/llm/concept_prompts.csv"),
+        default=Path("src/llm/concept_prompts.csv"),
         help="Path to concept_prompts.csv (with columns Class, Concept)",
     )
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("/configs/single_classes"),
+        default=Path("configs/single_classes"),
         help="Output directory for generated YAML files",
     )
     parser.add_argument(
         "--test",
         type=Path,
-        default=Path("/VisualTCAV/test_images"),
+        default=Path("VisualTCAV/test_images"),
         help="Root of test_images",
     )
     parser.add_argument(
         "--concepts",
         type=Path,
-        default=Path("/VisualTCAV/concept_images"),
+        default=Path("VisualTCAV/concept_images"),
         help="Root of concept_images",
     )
 

@@ -7,6 +7,7 @@ classes:
     - striped_flux
     - striped_gpti1
     - striped_sd35
+    bootstrap: true
     concept_imputation:
       example: zebra_unstriped.jpg
       folder: zebra_unstriped
@@ -15,6 +16,7 @@ classes:
     - wrinkled_flux
     - wrinkled_gpti1
     - wrinkled_sd35
+    bootstrap: true
     concept_imputation:
       example: zebra_unwrinkled.jpg
       folder: zebra_unwrinkled

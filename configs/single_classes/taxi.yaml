@@ -7,6 +7,7 @@ classes:
     - taxi_sign_flux
     - taxi_sign_gpti1
     - taxi_sign_sd35
+    bootstrap: true
     concept_imputation:
       example: taxi_untaxi_sign.jpg
       folder: taxi_untaxi_sign

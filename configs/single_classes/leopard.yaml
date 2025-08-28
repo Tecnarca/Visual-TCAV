@@ -7,6 +7,7 @@ classes:
     - asparagus_flux
     - asparagus_gpti1
     - asparagus_sd35
+    bootstrap: true
     concept_imputation:
       example: leopard_unasparagus.jpg
       folder: leopard_unasparagus
@@ -15,6 +16,7 @@ classes:
     - feline_flux
     - feline_gpti1
     - feline_sd35
+    bootstrap: true
     concept_imputation:
       example: leopard_unfeline.jpg
       folder: leopard_unfeline
@@ -23,6 +25,7 @@ classes:
     - foliage_flux
     - foliage_gpti1
     - foliage_sd35
+    bootstrap: true
     concept_imputation:
       example: leopard_unfoliage.jpg
       folder: leopard_unfoliage
@@ -31,6 +34,7 @@ classes:
     - leopard_print_flux
     - leopard_print_gpti1
     - leopard_print_sd35
+    bootstrap: true
     concept_imputation:
       example: leopard_unleopard_print.jpg
       folder: leopard_unleopard_print
@@ -39,6 +43,7 @@ classes:
     - rodent_flux
     - rodent_gpti1
     - rodent_sd35
+    bootstrap: true
     concept_imputation:
       example: leopard_unrodent.jpg
       folder: leopard_unrodent
@@ -47,6 +52,7 @@ classes:
     - tattoo_flux
     - tattoo_gpti1
     - tattoo_sd35
+    bootstrap: true
     concept_imputation:
       example: leopard_untattoo.jpg
       folder: leopard_untattoo

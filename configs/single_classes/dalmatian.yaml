@@ -7,6 +7,7 @@ classes:
     - dotted_flux
     - dotted_gpti1
     - dotted_sd35
+    bootstrap: true
     concept_imputation:
       example: dalmatian_undotted.jpg
       folder: dalmatian_undotted
@@ -15,6 +16,7 @@ classes:
     - fabric_flux
     - fabric_gpti1
     - fabric_sd35
+    bootstrap: true
     concept_imputation:
       example: dalmatian_unfabric.jpg
       folder: dalmatian_unfabric
@@ -23,6 +25,7 @@ classes:
     - spotted_flux
     - spotted_gpti1
     - spotted_sd35
+    bootstrap: true
     concept_imputation:
       example: dalmatian_unspotted.jpg
       folder: dalmatian_unspotted

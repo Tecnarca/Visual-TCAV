@@ -7,11 +7,13 @@ classes:
     - cracked_flux
     - cracked_gpti1
     - cracked_sd35
+    bootstrap: true
   - true_label: lichen
     generated:
     - lichen_flux
     - lichen_gpti1
     - lichen_sd35
+    bootstrap: true
     concept_imputation:
       example: stone_wall_unlichen.jpg
       folder: stone_wall_unlichen
@@ -20,6 +22,7 @@ classes:
     - stone_flux
     - stone_gpti1
     - stone_sd35
+    bootstrap: true
     concept_imputation:
       example: stone_wall_unstone.jpg
       folder: stone_wall_unstone

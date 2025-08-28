@@ -7,6 +7,7 @@ classes:
     - perforated_flux
     - perforated_gpti1
     - perforated_sd35
+    bootstrap: true
     concept_imputation:
       example: spider_web_unperforated.jpg
       folder: spider_web_unperforated
@@ -15,6 +16,7 @@ classes:
     - spiralled_flux
     - spiralled_gpti1
     - spiralled_sd35
+    bootstrap: true
     concept_imputation:
       example: spider_web_unspiralled.jpg
       folder: spider_web_unspiralled

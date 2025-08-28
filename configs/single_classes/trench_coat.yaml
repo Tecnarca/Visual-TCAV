@@ -7,6 +7,7 @@ classes:
     - grandfather_flux
     - grandfather_gpti1
     - grandfather_sd35
+    bootstrap: true
     concept_imputation:
       example: trench_coat_ungrandfather.jpg
       folder: trench_coat_ungrandfather
@@ -15,6 +16,7 @@ classes:
     - guitarist_flux
     - guitarist_gpti1
     - guitarist_sd35
+    bootstrap: true
     concept_imputation:
       example: trench_coat_unguitarist.jpg
       folder: trench_coat_unguitarist
@@ -23,6 +25,7 @@ classes:
     - leather_flux
     - leather_gpti1
     - leather_sd35
+    bootstrap: true
     concept_imputation:
       example: trench_coat_unleather.jpg
       folder: trench_coat_unleather
@@ -31,6 +34,7 @@ classes:
     - woven_flux
     - woven_gpti1
     - woven_sd35
+    bootstrap: true
     concept_imputation:
       example: trench_coat_unwoven.jpg
       folder: trench_coat_unwoven

@@ -7,6 +7,7 @@ classes:
     - chequered_flux
     - chequered_gpti1
     - chequered_sd35
+    bootstrap: true
     concept_imputation:
       example: crossword_puzzle_unchequered.jpg
       folder: crossword_puzzle_unchequered
@@ -15,6 +16,7 @@ classes:
     - newspaper_flux
     - newspaper_gpti1
     - newspaper_sd35
+    bootstrap: true
     concept_imputation:
       example: crossword_puzzle_unnewspaper.jpg
       folder: crossword_puzzle_unnewspaper
@@ -23,6 +25,7 @@ classes:
     - paper_flux
     - paper_gpti1
     - paper_sd35
+    bootstrap: true
     concept_imputation:
       example: crossword_puzzle_unpaper.jpg
       folder: crossword_puzzle_unpaper
@@ -31,6 +34,7 @@ classes:
     - pen_flux
     - pen_gpti1
     - pen_sd35
+    bootstrap: true
     concept_imputation:
       example: crossword_puzzle_unpen.jpg
       folder: crossword_puzzle_unpen
