@@ -1,0 +1,89 @@
+classes:
+- name: leopard
+  example_image: leopard.jpg
+  concepts_groups:
+  - true_label: asparagus
+    generated:
+    - asparagus_flux
+    - asparagus_gpti1
+    - asparagus_sd35
+    concept_imputation:
+      example: leopard_unasparagus.jpg
+      folder: leopard_unasparagus
+  - true_label: feline
+    generated:
+    - feline_flux
+    - feline_gpti1
+    - feline_sd35
+    concept_imputation:
+      example: leopard_unfeline.jpg
+      folder: leopard_unfeline
+  - true_label: foliage
+    generated:
+    - foliage_flux
+    - foliage_gpti1
+    - foliage_sd35
+    concept_imputation:
+      example: leopard_unfoliage.jpg
+      folder: leopard_unfoliage
+  - true_label: leopard_print
+    generated:
+    - leopard_print_flux
+    - leopard_print_gpti1
+    - leopard_print_sd35
+    concept_imputation:
+      example: leopard_unleopard_print.jpg
+      folder: leopard_unleopard_print
+  - true_label: rodent
+    generated:
+    - rodent_flux
+    - rodent_gpti1
+    - rodent_sd35
+    concept_imputation:
+      example: leopard_unrodent.jpg
+      folder: leopard_unrodent
+  - true_label: tattoo
+    generated:
+    - tattoo_flux
+    - tattoo_gpti1
+    - tattoo_sd35
+    concept_imputation:
+      example: leopard_untattoo.jpg
+      folder: leopard_untattoo
+models:
+- name: ResNet50V2
+  graph_path_filename: ResNet50V2-architecture-and-weights-compiled.h5
+  label_path_filename: ResNet50V2-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.resnet_v2.preprocess_input
+  max_examples: 500
+  layers:
+  - conv5_block1_out
+  - conv5_block2_out
+  - conv5_block3_out
+- name: VGG16
+  graph_path_filename: VGG16-architecture-and-weights-compiled.h5
+  label_path_filename: VGG16-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.vgg16.preprocess_input
+  max_examples: 500
+  layers:
+  - block5_conv1
+  - block5_conv2
+  - block5_conv3
+- name: InceptionV3
+  graph_path_filename: InceptionV3-architecture-and-weights-compiled.h5
+  label_path_filename: InceptionV3-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.inception_v3.preprocess_input
+  max_examples: 500
+  layers:
+  - mixed7
+  - mixed8
+  - mixed10
+- name: ConvNeXt
+  graph_path_filename: ConvNeXt-architecture-and-weights-compiled
+  label_path_filename: ConvNeXt-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.convnext.preprocess_input
+  max_examples: 500
+  layers:
+  - tf.__operators__.add_33
+  - tf.__operators__.add_34
+  - tf.__operators__.add_35

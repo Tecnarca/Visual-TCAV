@@ -1,0 +1,73 @@
+classes:
+- name: church
+  example_image: church.jpg
+  concepts_groups:
+  - true_label: cloister
+    generated:
+    - cloister_flux
+    - cloister_gpti1
+    - cloister_sd35
+    concept_imputation:
+      example: church_uncloister.jpg
+      folder: church_uncloister
+  - true_label: frilly
+    generated:
+    - frilly_flux
+    - frilly_gpti1
+    - frilly_sd35
+    concept_imputation:
+      example: church_unfrilly.jpg
+      folder: church_unfrilly
+  - true_label: steeple
+    generated:
+    - steeple_flux
+    - steeple_gpti1
+    - steeple_sd35
+    concept_imputation:
+      example: church_unsteeple.jpg
+      folder: church_unsteeple
+  - true_label: wood
+    generated:
+    - wood_flux
+    - wood_gpti1
+    - wood_sd35
+    concept_imputation:
+      example: church_unwood.jpg
+      folder: church_unwood
+models:
+- name: ResNet50V2
+  graph_path_filename: ResNet50V2-architecture-and-weights-compiled.h5
+  label_path_filename: ResNet50V2-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.resnet_v2.preprocess_input
+  max_examples: 500
+  layers:
+  - conv5_block1_out
+  - conv5_block2_out
+  - conv5_block3_out
+- name: VGG16
+  graph_path_filename: VGG16-architecture-and-weights-compiled.h5
+  label_path_filename: VGG16-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.vgg16.preprocess_input
+  max_examples: 500
+  layers:
+  - block5_conv1
+  - block5_conv2
+  - block5_conv3
+- name: InceptionV3
+  graph_path_filename: InceptionV3-architecture-and-weights-compiled.h5
+  label_path_filename: InceptionV3-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.inception_v3.preprocess_input
+  max_examples: 500
+  layers:
+  - mixed7
+  - mixed8
+  - mixed10
+- name: ConvNeXt
+  graph_path_filename: ConvNeXt-architecture-and-weights-compiled
+  label_path_filename: ConvNeXt-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.convnext.preprocess_input
+  max_examples: 500
+  layers:
+  - tf.__operators__.add_33
+  - tf.__operators__.add_34
+  - tf.__operators__.add_35

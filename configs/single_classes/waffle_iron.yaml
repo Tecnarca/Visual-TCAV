@@ -1,0 +1,81 @@
+classes:
+- name: waffle_iron
+  example_image: waffle_iron.jpg
+  concepts_groups:
+  - true_label: cast_iron
+    generated:
+    - cast_iron_flux
+    - cast_iron_gpti1
+    - cast_iron_sd35
+    concept_imputation:
+      example: waffle_iron_uncast_iron.jpg
+      folder: waffle_iron_uncast_iron
+  - true_label: kitchen
+    generated:
+    - kitchen_flux
+    - kitchen_gpti1
+    - kitchen_sd35
+    concept_imputation:
+      example: waffle_iron_unkitchen.jpg
+      folder: waffle_iron_unkitchen
+  - true_label: meshed
+    generated:
+    - meshed_flux
+    - meshed_gpti1
+    - meshed_sd35
+    concept_imputation:
+      example: waffle_iron_unmeshed.jpg
+      folder: waffle_iron_unmeshed
+  - true_label: metal
+    generated:
+    - metal_flux
+    - metal_gpti1
+    - metal_sd35
+    concept_imputation:
+      example: waffle_iron_unmetal.jpg
+      folder: waffle_iron_unmetal
+  - true_label: waffled
+    generated:
+    - waffled_flux
+    - waffled_gpti1
+    - waffled_sd35
+    concept_imputation:
+      example: waffle_iron_unwaffled.jpg
+      folder: waffle_iron_unwaffled
+models:
+- name: ResNet50V2
+  graph_path_filename: ResNet50V2-architecture-and-weights-compiled.h5
+  label_path_filename: ResNet50V2-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.resnet_v2.preprocess_input
+  max_examples: 500
+  layers:
+  - conv5_block1_out
+  - conv5_block2_out
+  - conv5_block3_out
+- name: VGG16
+  graph_path_filename: VGG16-architecture-and-weights-compiled.h5
+  label_path_filename: VGG16-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.vgg16.preprocess_input
+  max_examples: 500
+  layers:
+  - block5_conv1
+  - block5_conv2
+  - block5_conv3
+- name: InceptionV3
+  graph_path_filename: InceptionV3-architecture-and-weights-compiled.h5
+  label_path_filename: InceptionV3-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.inception_v3.preprocess_input
+  max_examples: 500
+  layers:
+  - mixed7
+  - mixed8
+  - mixed10
+- name: ConvNeXt
+  graph_path_filename: ConvNeXt-architecture-and-weights-compiled
+  label_path_filename: ConvNeXt-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.convnext.preprocess_input
+  max_examples: 500
+  layers:
+  - tf.__operators__.add_33
+  - tf.__operators__.add_34
+  - tf.__operators__.add_35

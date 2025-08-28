@@ -1,0 +1,73 @@
+classes:
+- name: trench_coat
+  example_image: trench_coat.jpg
+  concepts_groups:
+  - true_label: grandfather
+    generated:
+    - grandfather_flux
+    - grandfather_gpti1
+    - grandfather_sd35
+    concept_imputation:
+      example: trench_coat_ungrandfather.jpg
+      folder: trench_coat_ungrandfather
+  - true_label: guitarist
+    generated:
+    - guitarist_flux
+    - guitarist_gpti1
+    - guitarist_sd35
+    concept_imputation:
+      example: trench_coat_unguitarist.jpg
+      folder: trench_coat_unguitarist
+  - true_label: leather
+    generated:
+    - leather_flux
+    - leather_gpti1
+    - leather_sd35
+    concept_imputation:
+      example: trench_coat_unleather.jpg
+      folder: trench_coat_unleather
+  - true_label: woven
+    generated:
+    - woven_flux
+    - woven_gpti1
+    - woven_sd35
+    concept_imputation:
+      example: trench_coat_unwoven.jpg
+      folder: trench_coat_unwoven
+models:
+- name: ResNet50V2
+  graph_path_filename: ResNet50V2-architecture-and-weights-compiled.h5
+  label_path_filename: ResNet50V2-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.resnet_v2.preprocess_input
+  max_examples: 500
+  layers:
+  - conv5_block1_out
+  - conv5_block2_out
+  - conv5_block3_out
+- name: VGG16
+  graph_path_filename: VGG16-architecture-and-weights-compiled.h5
+  label_path_filename: VGG16-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.vgg16.preprocess_input
+  max_examples: 500
+  layers:
+  - block5_conv1
+  - block5_conv2
+  - block5_conv3
+- name: InceptionV3
+  graph_path_filename: InceptionV3-architecture-and-weights-compiled.h5
+  label_path_filename: InceptionV3-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.inception_v3.preprocess_input
+  max_examples: 500
+  layers:
+  - mixed7
+  - mixed8
+  - mixed10
+- name: ConvNeXt
+  graph_path_filename: ConvNeXt-architecture-and-weights-compiled
+  label_path_filename: ConvNeXt-imagenet-classes.txt
+  preprocessing_function: tensorflow.keras.applications.convnext.preprocess_input
+  max_examples: 500
+  layers:
+  - tf.__operators__.add_33
+  - tf.__operators__.add_34
+  - tf.__operators__.add_35
