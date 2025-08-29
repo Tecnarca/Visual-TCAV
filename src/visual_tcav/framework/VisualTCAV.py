@@ -1547,7 +1547,7 @@ class KerasModelWrapper:
     ##### Get the prediction(s) given one or more input(s) #####
     def get_predictions(self, imgs):
         # Feed the model with the inputs
-        with tf.device("/CPU:0" if self.run_on_cpu else ""):
+        with tf.device("/GPU:0" if not self.run_on_cpu else "/CPU:0"):
             inputs = tf.cast(imgs, tf.float32)
             predictions = self.model(inputs)
         # Return the predictions
@@ -1567,7 +1567,7 @@ class KerasModelWrapper:
             q = i % self.batch_size
             if q == self.batch_size - 1 or i == len(imgs) - 1:
                 inputs = tf.cast(imgs[i - q : min(i + 1, len(imgs))], tf.float32)
-                with tf.device("/CPU:0" if self.run_on_cpu else ""):
+                with tf.device("/GPU:0" if not self.run_on_cpu else "/CPU:0"):
                     output = self.simulated_layer_model[layer_name](inputs)
                 if len(feature_maps) == 0:
                     feature_maps = output
@@ -1587,7 +1587,7 @@ class KerasModelWrapper:
             self.simulated_logits_model[layer_name].layers[-1].activation = None
 
         # Feed the model with the inputs
-        with tf.device("/CPU:0" if self.run_on_cpu else ""):
+        with tf.device("/GPU:0" if not self.run_on_cpu else "/CPU:0"):
             logits = self.simulated_logits_model[layer_name](feature_maps)
 
         # Return the logits
@@ -1611,7 +1611,7 @@ class KerasModelWrapper:
                     feature_maps[i - q : min(i + 1, len(feature_maps))], tf.float32
                 )
                 # Real batched computation
-                with tf.device("/CPU:0" if self.run_on_cpu else ""):
+                with tf.device("/GPU:0" if not self.run_on_cpu else "/CPU:0"):
                     with tf.GradientTape() as tape:
                         tape.watch(inputs)
                         logits = self.simulated_logits_model[layer_name](inputs)
