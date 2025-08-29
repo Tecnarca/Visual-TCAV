@@ -677,7 +677,7 @@ class LocalVisualTCAV(VisualTCAV):
                         )
 
     ##### Plot heatmaps and information #####
-    def plot(self, paper=False):
+    def plot(self, paper=False, is_imputation=False):
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -843,7 +843,8 @@ class LocalVisualTCAV(VisualTCAV):
 
             # Show
             fig.tight_layout()
-            LOGGER.log_figure(plt, self.concepts[0])
+            prefix = "un" if is_imputation else ""
+            LOGGER.log_figure(plt, prefix + self.concepts[0])
             # plt.show()
             plt.close(fig)
 
@@ -1111,7 +1112,7 @@ class GlobalVisualTCAV(VisualTCAV):
             del attribution_list
 
     ##### Plot graphs and information #####
-    def plot(self, colormap="viridis", paper=False, save_to=None):
+    def plot(self, colormap="viridis", paper=False, is_imputation=False):
         # Checks
         if not self.model:
             raise Exception("Instantiate a Model first")
@@ -1218,7 +1219,8 @@ class GlobalVisualTCAV(VisualTCAV):
         fig.tight_layout()
         plt.ylim(bottom=0, top=max(0.1, plt.ylim()[1]))
         plt.xlim(left=-0.5, right=0.5 + len(self.concepts) - 1)
-        LOGGER.log_figure(plt, self.concepts[0])
+        prefix = "un" if is_imputation else ""
+        LOGGER.log_figure(plt, prefix+self.concepts[0])
         # plt.show()
 
     ##### Print stats and information #####

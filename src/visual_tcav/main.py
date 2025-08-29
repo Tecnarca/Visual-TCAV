@@ -121,7 +121,7 @@ def build_steps(config) -> List[Dict]:
                             ),
                             "log": f"Local • imputation example • {obj_name} • {cg_label} • {model_name}",
                             "run": lambda cg=concept_group, m=model: run_local_visual_tcav(
-                                cg.concept_imputation.example, cg, m
+                                cg.concept_imputation.example, cg, m, is_imputation=True
                             ),
                         }
                     )
@@ -140,7 +140,7 @@ def build_steps(config) -> List[Dict]:
                             ),
                             "log": f"Global • imputation folder • {obj_name} • {cg_label} • {model_name}",
                             "run": lambda oc=object_class, cg=concept_group, m=model: run_global_visual_tcav(
-                                cg.concept_imputation.folder, oc, cg, m
+                                cg.concept_imputation.folder, oc, cg, m, is_imputation=True
                             ),
                         }
                     )
