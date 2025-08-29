@@ -16,6 +16,7 @@ Example:
 """
 
 from __future__ import annotations
+
 import argparse
 import shutil
 from pathlib import Path
@@ -78,7 +79,9 @@ def copy_subfolders_and_images(src_root: Path, dst_root: Path) -> None:
         print(f"Copied folder: {src_subdir} -> {dst_subdir}")
         one_img = first_image_in(dst_subdir)
         if one_img is None:
-            print(f"  ⚠ No images found inside '{src_subdir.name}'. Skipping representative image.")
+            print(
+                f"  ⚠ No images found inside '{src_subdir.name}'. Skipping representative image."
+            )
             continue
         img_ext = one_img.suffix.lower()
         rep_name = f"{norm_name}{img_ext}"
@@ -102,14 +105,24 @@ def parse_args() -> argparse.Namespace:
     default_src = "/edited_images"
     default_dst = "/VisualTCAV/test_images"
 
-    #default_src = "/home/tecnarca/PycharmProjects/Visual-TCAV/generated_images"
-    #default_dst = "/home/tecnarca/PycharmProjects/Visual-TCAV/VisualTCAV/concept_images"
+    # default_src = "/home/tecnarca/PycharmProjects/Visual-TCAV/generated_images"
+    # default_dst = "/home/tecnarca/PycharmProjects/Visual-TCAV/VisualTCAV/concept_images"
 
-    ap = argparse.ArgumentParser(description="Copy normalized folders and extract one image each.")
-    ap.add_argument("--src", type=Path, default=Path(default_src),
-                    help="Source root containing subfolders (default: %(default)s)")
-    ap.add_argument("--dst", type=Path, default=Path(default_dst),
-                    help="Destination root for copied folders and images (default: %(default)s)")
+    ap = argparse.ArgumentParser(
+        description="Copy normalized folders and extract one image each."
+    )
+    ap.add_argument(
+        "--src",
+        type=Path,
+        default=Path(default_src),
+        help="Source root containing subfolders (default: %(default)s)",
+    )
+    ap.add_argument(
+        "--dst",
+        type=Path,
+        default=Path(default_dst),
+        help="Destination root for copied folders and images (default: %(default)s)",
+    )
     return ap.parse_args()
 
 

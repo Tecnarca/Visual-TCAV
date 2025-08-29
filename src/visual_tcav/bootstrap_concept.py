@@ -1,9 +1,10 @@
-from pathlib import Path
+import os
 import random
 import shutil
-import os
+from pathlib import Path
 
 from src.loggers import REPO_ROOT_PATH
+
 
 def bootstrap_concept(concept_name, n=5, ratio=1):
     """
@@ -46,7 +47,9 @@ def bootstrap_concept(concept_name, n=5, ratio=1):
             # Use a relative path for the symlink to keep things portable
             rel_src = os.path.relpath(src, start=new_folder)
             try:
-                target.symlink_to(rel_src)  # files only; no need for target_is_directory=True
+                target.symlink_to(
+                    rel_src
+                )  # files only; no need for target_is_directory=True
             except OSError as e:
                 # Common on Windows without Developer Mode/admin. Be explicit.
                 raise OSError(

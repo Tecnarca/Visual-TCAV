@@ -2,14 +2,18 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Union, Iterable
+from typing import Iterable, Union
+
 import pandas as pd
 from tqdm import tqdm
+
 
 def run_concept_stripping_from_df_batched(
     script_path: Union[str, Path],
     df: pd.DataFrame,
-    classes_root: Union[str, Path] = "/home/tecnarca/PycharmProjects/Visual-TCAV/VisualTCAV/test_images",
+    classes_root: Union[
+        str, Path
+    ] = "/home/tecnarca/PycharmProjects/Visual-TCAV/VisualTCAV/test_images",
     output_root: Union[str, Path] = "edited_images",
     staging_root: Union[str, Path] = ".staging_edits",
     exts: Iterable[str] = (".png", ".jpg", ".jpeg"),
@@ -41,7 +45,9 @@ def run_concept_stripping_from_df_batched(
     df["Concept"] = df["Concept"].astype(str)
 
     # Global progress over all (Class, Concept) pairs
-    for _, row in tqdm(df.iterrows(), total=len(df), desc="Concept batches", unit="batch"):
+    for _, row in tqdm(
+        df.iterrows(), total=len(df), desc="Concept batches", unit="batch"
+    ):
         cls = row["Class"]
         concept = row["Concept"]
 
@@ -62,7 +68,9 @@ def run_concept_stripping_from_df_batched(
         concept_out.mkdir(parents=True, exist_ok=True)
 
         # Collect candidate images
-        images = sorted([p for p in class_dir.iterdir() if p.is_file() and p.suffix.lower() in exts])
+        images = sorted(
+            [p for p in class_dir.iterdir() if p.is_file() and p.suffix.lower() in exts]
+        )
         if not images:
             tqdm.write(f"[info] No images found for class '{cls}' in {class_dir}")
             continue
@@ -70,7 +78,9 @@ def run_concept_stripping_from_df_batched(
         # Determine which images still need editing (resume logic)
         pending = [p for p in images if not (concept_out / f"{p.name}").exists()]
         if not pending:
-            tqdm.write(f"[done] Nothing left to edit for Class='{cls}' Concept='{concept}'.")
+            tqdm.write(
+                f"[done] Nothing left to edit for Class='{cls}' Concept='{concept}'."
+            )
             continue
 
         # ✅ Skip if pending < 10
@@ -117,18 +127,26 @@ def run_concept_stripping_from_df_batched(
         cmd = [
             sys.executable,
             str(script_path),
-            "--prompt", prompt,
-            "--model", "gpti1",
-            "--edit_image_path", str(stage_dir),
-            "--output_dir", str(concept_out),
+            "--prompt",
+            prompt,
+            "--model",
+            "gpti1",
+            "--edit_image_path",
+            str(stage_dir),
+            "--output_dir",
+            str(concept_out),
         ]
 
         try:
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError as e:
-            tqdm.write(f"[error] batch failed for Class='{cls}' Concept='{concept}' (exit {e.returncode}). Continuing…")
+            tqdm.write(
+                f"[error] batch failed for Class='{cls}' Concept='{concept}' (exit {e.returncode}). Continuing…"
+            )
         except Exception as e:
-            tqdm.write(f"[error] batch failed for Class='{cls}' Concept='{concept}': {e}. Continuing…")
+            tqdm.write(
+                f"[error] batch failed for Class='{cls}' Concept='{concept}': {e}. Continuing…"
+            )
         finally:
             # Optional: clean up staging to keep things tidy
             try:
@@ -138,8 +156,6 @@ def run_concept_stripping_from_df_batched(
             except Exception:
                 # If something holds the dir, we'll leave it; it’s safe to reuse/overwrite next run.
                 pass
-
-
 
 
 if __name__ == "__main__":

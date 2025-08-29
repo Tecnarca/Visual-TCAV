@@ -27,6 +27,7 @@ Outputs are merged with a static `models:` block as provided by the user.
 """
 
 from __future__ import annotations
+
 import argparse
 import csv
 from collections import defaultdict
@@ -95,11 +96,13 @@ def pick_concept_folder(test_root: Path, cls: str, concept: str) -> Optional[str
 
 def load_class_concepts(csv_path: Path) -> Dict[str, Set[str]]:
     mapping: Dict[str, Set[str]] = defaultdict(set)
-    with csv_path.open(newline='', encoding='utf-8') as f:
+    with csv_path.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         required = {"Class", "Concept"}
         if not required.issubset(reader.fieldnames or {}):
-            raise ValueError(f"CSV must contain columns {required}, found {reader.fieldnames}")
+            raise ValueError(
+                f"CSV must contain columns {required}, found {reader.fieldnames}"
+            )
         for row in reader:
             cls_raw = row.get("Class", "").strip()
             concept_raw = row.get("Concept", "").strip()
@@ -142,7 +145,11 @@ MODELS_BLOCK = [
         "label_path_filename": "ConvNeXt-imagenet-classes.txt",
         "preprocessing_function": "tensorflow.keras.applications.convnext.preprocess_input",
         "max_examples": 500,
-        "layers": ['tf.__operators__.add_33', 'tf.__operators__.add_34', 'tf.__operators__.add_35'],
+        "layers": [
+            "tf.__operators__.add_33",
+            "tf.__operators__.add_34",
+            "tf.__operators__.add_35",
+        ],
     },
 ]
 
@@ -155,7 +162,9 @@ def build_yaml_for_class(
 ) -> Optional[dict]:
     example_image = find_example_image(test_root, cls)
     if not example_image:
-        print(f"⚠ Skipping class '{cls}': no example image '<cls>.<ext>' found in {test_root}")
+        print(
+            f"⚠ Skipping class '{cls}': no example image '<cls>.<ext>' found in {test_root}"
+        )
         return None
 
     concept_groups = []
@@ -206,6 +215,7 @@ def write_yaml(obj: dict, out_path: Path) -> None:
     if yaml is None:
         # Minimal fallback without PyYAML
         import json
+
         # Not true YAML, but provides a readable output; user can install PyYAML for proper YAML
         with out_path.open("w", encoding="utf-8") as f:
             f.write("# Install PyYAML for canonical YAML output: pip install pyyaml\n")
@@ -213,7 +223,6 @@ def write_yaml(obj: dict, out_path: Path) -> None:
         return
     with out_path.open("w", encoding="utf-8") as f:
         yaml.safe_dump(obj, f, sort_keys=False, allow_unicode=True)
-
 
 
 def validate_yaml_paths(data: dict, test_root: Path, concepts_root: Path) -> List[str]:
@@ -241,7 +250,9 @@ def validate_yaml_paths(data: dict, test_root: Path, concepts_root: Path) -> Lis
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate single-class YAML configs from CSV")
+    parser = argparse.ArgumentParser(
+        description="Generate single-class YAML configs from CSV"
+    )
     parser.add_argument(
         "--csv",
         type=Path,
@@ -274,7 +285,9 @@ def main():
     if not args.test.exists():
         raise FileNotFoundError(f"test_images path not found: {args.test}")
     if not args.concepts.exists():
-        print(f"⚠ concept_images path not found: {args.concepts}. 'generated' lists will be empty.")
+        print(
+            f"⚠ concept_images path not found: {args.concepts}. 'generated' lists will be empty."
+        )
 
     mapping = load_class_concepts(args.csv)
     if not mapping:

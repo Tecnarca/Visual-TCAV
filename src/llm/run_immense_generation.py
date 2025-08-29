@@ -21,12 +21,14 @@ FNAME_RE_CACHE = {}  # cache compiled regex per model
 # ===== NEW: estimation helpers =====
 from collections import defaultdict
 
+
 def _have_count_like_runtime(target_dir: Path, model: str) -> int:
     """
     Mirrors the runtime's notion of 'already' images:
     the maximum index among files named {model}_{N}.png (not the count).
     """
     return _max_existing_index(target_dir, model)
+
 
 def estimate_missing(df: pd.DataFrame, output_root: Path) -> pd.DataFrame:
     """
@@ -40,8 +42,11 @@ def estimate_missing(df: pd.DataFrame, output_root: Path) -> pd.DataFrame:
             target_dir = output_root / f"{concept}_{model}"
             have = _have_count_like_runtime(target_dir, model)
             need = max(0, TARGET_PER_CONCEPT - have)
-            rows.append({"Concept": concept, "Model": model, "Have": have, "Need": need})
+            rows.append(
+                {"Concept": concept, "Model": model, "Have": have, "Need": need}
+            )
     return pd.DataFrame(rows)
+
 
 def print_estimate_summary(est_df: pd.DataFrame):
     """
@@ -54,9 +59,7 @@ def print_estimate_summary(est_df: pd.DataFrame):
         return
 
     # Totals per model
-    model_totals = (est_df.groupby("Model")["Need"]
-                    .sum()
-                    .sort_values(ascending=False))
+    model_totals = est_df.groupby("Model")["Need"].sum().sort_values(ascending=False)
     print("\n====== Missing Images: Totals per Model ======")
     for model, need_sum in model_totals.items():
         print(f"{model:>12}: {need_sum}")
@@ -71,14 +74,17 @@ def print_estimate_summary(est_df: pd.DataFrame):
 
     # Per-concept top needs (optional, helpful when many concepts)
     print("\n-- Top missing (by Concept, per Model) --")
-    top = (est_df.sort_values(["Need", "Concept", "Model"], ascending=[False, True, True])
-                 .query("Need > 0"))
+    top = est_df.sort_values(
+        ["Need", "Concept", "Model"], ascending=[False, True, True]
+    ).query("Need > 0")
     # Limit to a reasonable preview if large
     preview_rows = len(top)
     if preview_rows:
         print(top.head(preview_rows).to_string(index=False))
     else:
         print("All complete 🎉")
+
+
 # ===== END new estimation helpers =====
 
 
@@ -87,6 +93,7 @@ class GenTask:
     concept: str
     positive: str
     negative: str
+
 
 def _compiled_name_re(model: str):
     """Match files like 'flux_1.png' or 'stable_diffusion_42.png' or 'gpt-image-1_200.png'."""
@@ -113,7 +120,9 @@ def _max_existing_index(target_dir: Path, model: str) -> int:
     return max_idx
 
 
-def _move_and_renumber(staging_dir: Path, target_dir: Path, model: str, start_index: int) -> int:
+def _move_and_renumber(
+    staging_dir: Path, target_dir: Path, model: str, start_index: int
+) -> int:
     """Move PNGs from staging_dir to target_dir as {model}_{start+1..}.png; return count moved."""
     target_dir.mkdir(parents=True, exist_ok=True)
     pngs = sorted([p for p in staging_dir.glob("*.png") if p.is_file()])
@@ -184,7 +193,9 @@ def generate_from_df(
             remaining = max(0, TARGET_PER_CONCEPT - already)
 
             if remaining <= 0:
-                tqdm.write(f"[skip] Concept='{concept}' Model='{model}' already has {TARGET_PER_CONCEPT} images.")
+                tqdm.write(
+                    f"[skip] Concept='{concept}' Model='{model}' already has {TARGET_PER_CONCEPT} images."
+                )
                 pbar.update(1)
                 continue
 
@@ -199,10 +210,14 @@ def generate_from_df(
             cmd = [
                 sys.executable,
                 str(script_path),
-                "--prompt", pos_prompt,
-                "--model", model,
-                "--num_images", str(remaining),
-                "--output_dir", str(stage_dir),
+                "--prompt",
+                pos_prompt,
+                "--model",
+                model,
+                "--num_images",
+                str(remaining),
+                "--output_dir",
+                str(stage_dir),
             ]
             if neg_prompt.strip():
                 cmd.extend(["--negative_prompt", neg_prompt])
@@ -220,7 +235,9 @@ def generate_from_df(
                     "Keeping partial results; will resume next run."
                 )
 
-            moved = _move_and_renumber(stage_dir, target_dir, model, start_index=current_max)
+            moved = _move_and_renumber(
+                stage_dir, target_dir, model, start_index=current_max
+            )
             _clean_dir(stage_dir)
 
             tqdm.write(
@@ -234,7 +251,9 @@ def generate_from_df(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate images for each concept across all models (resumable).")
+    parser = argparse.ArgumentParser(
+        description="Generate images for each concept across all models (resumable)."
+    )
     parser.add_argument(
         "--script_path",
         type=Path,

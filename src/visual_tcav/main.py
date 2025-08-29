@@ -8,14 +8,10 @@ from tqdm import tqdm
 
 # IMPORTANT: import the module AND the classes, so we can replace the global logger used elsewhere.
 import src.loggers as loggers
-from src.loggers import ExperimentLogger, REPO_ROOT_PATH  # noqa: E402
-
+from src.loggers import REPO_ROOT_PATH, ExperimentLogger  # noqa: E402
 from src.visual_tcav.config_loader import load_config
-from src.visual_tcav.framework.run_visual_tcav import (
-    run_global_visual_tcav,
-    run_local_visual_tcav,
-)
-
+from src.visual_tcav.framework.run_visual_tcav import (run_global_visual_tcav,
+                                                       run_local_visual_tcav)
 
 CHECKPOINTS_DIR = REPO_ROOT_PATH / ".tcav_checkpoints"
 CHECKPOINTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -28,6 +24,7 @@ def init_logger(base_name: str | None) -> ExperimentLogger:
     """
 
     return loggers.LOGGER
+
 
 def checkpoint_path(base_name_or_fallback: str) -> Path:
     """
@@ -61,7 +58,9 @@ def step_id(
     action: str,
     target: str,
 ) -> str:
-    return "|".join([object_class_name, concept_group_label, model_name, action, target])
+    return "|".join(
+        [object_class_name, concept_group_label, model_name, action, target]
+    )
 
 
 def build_steps(config) -> List[Dict]:
@@ -97,7 +96,9 @@ def build_steps(config) -> List[Dict]:
                 # 2) Global TCAV on the object class
                 steps.append(
                     {
-                        "id": step_id(obj_name, cg_label, model_name, "global", obj_name),
+                        "id": step_id(
+                            obj_name, cg_label, model_name, "global", obj_name
+                        ),
                         "log": f"Global • class • {obj_name} • {cg_label} • {model_name}",
                         "run": lambda oc=object_class, cg=concept_group, m=model: run_global_visual_tcav(
                             oc.name, oc, cg, m
@@ -111,7 +112,13 @@ def build_steps(config) -> List[Dict]:
                     tgt = str(imputation.example)
                     steps.append(
                         {
-                            "id": step_id(obj_name, cg_label, model_name, "local_imputation_example", tgt),
+                            "id": step_id(
+                                obj_name,
+                                cg_label,
+                                model_name,
+                                "local_imputation_example",
+                                tgt,
+                            ),
                             "log": f"Local • imputation example • {obj_name} • {cg_label} • {model_name}",
                             "run": lambda cg=concept_group, m=model: run_local_visual_tcav(
                                 cg.concept_imputation.example, cg, m
@@ -124,7 +131,13 @@ def build_steps(config) -> List[Dict]:
                     tgt = str(imputation.folder)
                     steps.append(
                         {
-                            "id": step_id(obj_name, cg_label, model_name, "global_imputation_folder", tgt),
+                            "id": step_id(
+                                obj_name,
+                                cg_label,
+                                model_name,
+                                "global_imputation_folder",
+                                tgt,
+                            ),
                             "log": f"Global • imputation folder • {obj_name} • {cg_label} • {model_name}",
                             "run": lambda oc=object_class, cg=concept_group, m=model: run_global_visual_tcav(
                                 cg.concept_imputation.folder, oc, cg, m
@@ -160,7 +173,9 @@ def main(config_path: str, base_name: str | None):
     remaining = [s for s in steps if s["id"] not in completed]
 
     # Progress bar across ALL steps, pre-filled with completed count
-    pbar = tqdm(total=len(steps), initial=len(completed), desc="Visual TCAV", unit="step")
+    pbar = tqdm(
+        total=len(steps), initial=len(completed), desc="Visual TCAV", unit="step"
+    )
 
     for s in steps:
         if s["id"] in completed:

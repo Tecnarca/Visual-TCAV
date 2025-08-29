@@ -1523,7 +1523,7 @@ class KerasModelWrapper:
             )
         except ValueError:
             self.model = tf.keras.models.load_model(
-                model_path+".keras", custom_objects={"mse": MeanSquaredError()}
+                model_path + ".keras", custom_objects={"mse": MeanSquaredError()}
             )
 
         # Convnext does not work on GPU on MacM1

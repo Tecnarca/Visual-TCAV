@@ -1,7 +1,9 @@
 import os
 
 # Target directory
-directory = "/home/tecnarca/PycharmProjects/Visual-TCAV/edited_images/leopard_unAsparagus"
+directory = (
+    "/home/tecnarca/PycharmProjects/Visual-TCAV/edited_images/leopard_unAsparagus"
+)
 
 for filename in os.listdir(directory):
     if "edited" in filename or "_" in filename:
