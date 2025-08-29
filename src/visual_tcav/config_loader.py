@@ -6,7 +6,7 @@ import yaml
 from pydantic import (BaseModel, Field, field_serializer, field_validator,
                       model_validator)
 
-from src.visual_tcav.bootstrap_concept import boostrap_concept
+from src.visual_tcav.bootstrap_concept import bootstrap_concept
 from src.visual_tcav.framework.VisualTCAV import Model
 
 
@@ -26,7 +26,7 @@ class ConceptGroup(BaseModel):
         if self.bootstrap:
             self.generated = list(
                 itertools.chain.from_iterable(
-                    boostrap_concept(concept) for concept in self.generated
+                    bootstrap_concept(concept) for concept in self.generated
                 )
             )
         return self
