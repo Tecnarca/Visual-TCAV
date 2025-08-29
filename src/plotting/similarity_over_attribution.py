@@ -65,8 +65,8 @@ def load_metrics_from_experiment_set(set_prefix: str) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    attributions = load_dataframe_from_experiment_set("3")
-    similarities = load_metrics_from_experiment_set("3")
+    attributions = load_dataframe_from_experiment_set("test_runs")
+    similarities = load_metrics_from_experiment_set("test_runs")
 
     mask_false_attributions = attributions["Concept"].isin(
         similarities["Concept"].unique()
