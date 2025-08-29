@@ -188,3 +188,4 @@ VisualTCAV/
 outputs/
 comfyui_output/
 experiments/
+.tcav_checkpoints/
