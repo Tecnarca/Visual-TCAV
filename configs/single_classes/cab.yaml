@@ -1,6 +1,6 @@
 classes:
-- name: taxi
-  example_image: taxi.jpg
+- name: cab
+  example_image: cab.jpg
   concepts_groups:
   - true_label: taxi_sign
     generated:
@@ -9,8 +9,8 @@ classes:
     - taxi_sign_sd35
     bootstrap: true
     concept_imputation:
-      example: taxi_untaxi_sign.jpg
-      folder: taxi_untaxi_sign
+      example: cab_untaxi_sign.jpg
+      folder: cab_untaxi_sign
 models:
 - name: ResNet50V2
   graph_path_filename: ResNet50V2-architecture-and-weights-compiled.h5
