@@ -1,16 +1,16 @@
 classes:
-  - name: dalmatian
-    example_image: dalmatian.jpg
+  - name: church
+    example_image: church.jpg
     concepts_groups:
-      - true_label: dotted
-        bootstrap: True
-        generated:
-          - dotted_flux_2
-          - dotted_sd35_2
-          - dotted_cgpt_2
-        concept_ablation:
-          example: undotted_dalmatian.png
-          folder: undotted_dalmatian
+    - true_label: cloister
+      generated:
+      - cloister_flux
+      - cloister_gpti1
+      - cloister_sd35
+      bootstrap: true
+      concept_ablation:
+        example: church_uncloister.jpg
+        folder: church_uncloister
 
 
 models:
