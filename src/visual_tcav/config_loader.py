@@ -10,7 +10,7 @@ from src.visual_tcav.bootstrap_concept import bootstrap_concept
 from src.visual_tcav.framework.VisualTCAV import Model
 
 
-class ImputationTask(BaseModel):
+class AblationTask(BaseModel):
     example: Optional[str] = None
     folder: Optional[str] = None
 
@@ -18,7 +18,7 @@ class ImputationTask(BaseModel):
 class ConceptGroup(BaseModel):
     true_label: str
     generated: List[str]
-    concept_imputation: ImputationTask = Field(default_factory=ImputationTask)
+    concept_ablation: AblationTask = Field(default_factory=AblationTask)
     bootstrap: bool = False
 
     @model_validator(mode="after")

@@ -8,7 +8,7 @@ classes:
     - cloister_gpti1
     - cloister_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: church_uncloister.jpg
       folder: church_uncloister
   - true_label: frilly
@@ -17,7 +17,7 @@ classes:
     - frilly_gpti1
     - frilly_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: church_unfrilly.jpg
       folder: church_unfrilly
   - true_label: steeple
@@ -26,7 +26,7 @@ classes:
     - steeple_gpti1
     - steeple_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: church_unsteeple.jpg
       folder: church_unsteeple
   - true_label: wood
@@ -35,7 +35,7 @@ classes:
     - wood_gpti1
     - wood_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: church_unwood.jpg
       folder: church_unwood
 models:

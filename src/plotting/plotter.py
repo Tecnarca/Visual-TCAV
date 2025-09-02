@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 def _scatter_grid(
     g: pd.DataFrame,
     row_values: list,
-    row_mode: str,  # "imputation" or "concept"
+    row_mode: str,  # "Ablation" or "concept"
     models: list,
     out_path: str,
     figure_title: str,
@@ -17,8 +17,8 @@ def _scatter_grid(
 ):
     """
     Internal helper to render a grid:
-      - If row_mode == "imputation": each row is an ImputationOf value (one concept per row)
-      - If row_mode == "concept":    each row is a Concept (ImputationOf is null)
+      - If row_mode == "Ablation": each row is an AblationOf value (one concept per row)
+      - If row_mode == "concept":    each row is a Concept (AblationOf is null)
     Columns are Models in both cases.
     """
     n_rows, n_cols = len(row_values), len(models)
@@ -46,14 +46,14 @@ def _scatter_grid(
     llm_color = {llm: cmap(i) for i, llm in enumerate(llms)}
 
     for r, row_val in enumerate(row_values):
-        if row_mode == "imputation":
-            sub_row = g[g["ImputationOf"] == row_val]
-            # Exactly one concept per imputation row
+        if row_mode == "Ablation":
+            sub_row = g[g["AblationOf"] == row_val]
+            # Exactly one concept per Ablation row
             concept_names = list(sub_row["Concept"].dropna().unique())
             concept_for_title = concept_names[0] if concept_names else "?"
         else:  # "concept"
             concept_for_title = row_val
-            sub_row = g[(g["ImputationOf"].isna()) & (g["Concept"] == row_val)]
+            sub_row = g[(g["AblationOf"].isna()) & (g["Concept"] == row_val)]
 
         for c, model in enumerate(models):
             ax = axes[r, c]
@@ -107,19 +107,19 @@ def plot_similarity_vs_attribution_grouped(
     """
     Emit up to TWO figures per Class:
 
-      (A) Grouped-by-ImputationOf (if there are any non-null ImputationOf rows):
-            rows = each non-null ImputationOf
+      (A) Grouped-by-AblationOf (if there are any non-null AblationOf rows):
+            rows = each non-null AblationOf
             cols = Models
           (Each row has exactly one Concept.)
 
-      (B) Old behavior for non-imputed rows (ImputationOf is null):
-            rows = Concepts (among rows with ImputationOf null)
+      (B) Old behavior for non-imputed rows (AblationOf is null):
+            rows = Concepts (among rows with AblationOf null)
             cols = Models
 
     Markers: target red 'X'; LLMs colorful circles.
     Limits: per figure, max within figure + 5%.
     """
-    req = {'Model','Class','ImputationOf','Concept','LLM','Bootstrap','Mean','Std','Similarity'}
+    req = {'Model','Class','AblationOf','Concept','LLM','Bootstrap','Mean','Std','Similarity'}
     missing = req - set(df.columns)
     if missing:
         raise ValueError(f"Missing required columns: {sorted(missing)}")
@@ -129,16 +129,16 @@ def plot_similarity_vs_attribution_grouped(
     for clazz, gC in df.groupby("Class", dropna=False):
         models = list(dict.fromkeys(models_order or sorted(gC["Model"].unique())))
 
-        # ---- (A) Grouped-by-ImputationOf (non-null) ----
-        g_imp = gC[gC["ImputationOf"].notna()]
+        # ---- (A) Grouped-by-AblationOf (non-null) ----
+        g_imp = gC[gC["AblationOf"].notna()]
         if not g_imp.empty:
-            imp_rows = list(dict.fromkeys(sorted(g_imp["ImputationOf"].unique())))
+            imp_rows = list(dict.fromkeys(sorted(g_imp["AblationOf"].unique())))
             title = f"Similarity vs Attribution — Class: {clazz}\nRows: Imputed Concepts, Cols: Models"
-            out_name = os.path.join(outdir, f"scatter_{str(clazz).replace('/','-')}__grouped-by-ImputationOf.png")
+            out_name = os.path.join(outdir, f"scatter_{str(clazz).replace('/','-')}__grouped-by-AblationOf.png")
             _scatter_grid(
                 g=g_imp,
                 row_values=imp_rows,
-                row_mode="imputation",
+                row_mode="Ablation",
                 models=models,
                 out_path=out_name,
                 figure_title=title,
@@ -146,8 +146,8 @@ def plot_similarity_vs_attribution_grouped(
                 dpi=dpi,
             )
 
-        # ---- (B) Old behavior for non-imputed (ImputationOf null) ----
-        g_nil = gC[gC["ImputationOf"].isna()]
+        # ---- (B) Old behavior for non-imputed (AblationOf null) ----
+        g_nil = gC[gC["AblationOf"].isna()]
         if not g_nil.empty:
             # Rows are the concepts appearing in *non-imputed* rows only
             concepts = list(dict.fromkeys(concepts_order or sorted(g_nil["Concept"].unique())))

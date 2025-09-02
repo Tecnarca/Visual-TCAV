@@ -8,7 +8,7 @@ classes:
           - dotted_flux_2
           - dotted_sd35_2
           - dotted_cgpt_2
-        concept_imputation:
+        concept_ablation:
           example: undotted_dalmatian.png
           folder: undotted_dalmatian
 

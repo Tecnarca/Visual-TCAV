@@ -8,7 +8,7 @@ classes:
     - crystalline_gpti1
     - crystalline_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: honeycomb_uncrystalline.jpg
       folder: honeycomb_uncrystalline
   - true_label: honeycombed
@@ -17,7 +17,7 @@ classes:
     - honeycombed_gpti1
     - honeycombed_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: honeycomb_unhoneycombed.jpg
       folder: honeycomb_unhoneycombed
 models:

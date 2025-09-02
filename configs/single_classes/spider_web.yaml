@@ -8,7 +8,7 @@ classes:
     - perforated_gpti1
     - perforated_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: spider_web_unperforated.jpg
       folder: spider_web_unperforated
   - true_label: spiralled
@@ -17,7 +17,7 @@ classes:
     - spiralled_gpti1
     - spiralled_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: spider_web_unspiralled.jpg
       folder: spider_web_unspiralled
 models:

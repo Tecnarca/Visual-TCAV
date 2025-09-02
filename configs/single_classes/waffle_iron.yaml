@@ -8,7 +8,7 @@ classes:
     - cast_iron_gpti1
     - cast_iron_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: waffle_iron_uncast_iron.jpg
       folder: waffle_iron_uncast_iron
   - true_label: kitchen
@@ -17,7 +17,7 @@ classes:
     - kitchen_gpti1
     - kitchen_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: waffle_iron_unkitchen.jpg
       folder: waffle_iron_unkitchen
   - true_label: meshed
@@ -26,7 +26,7 @@ classes:
     - meshed_gpti1
     - meshed_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: waffle_iron_unmeshed.jpg
       folder: waffle_iron_unmeshed
   - true_label: metal
@@ -35,7 +35,7 @@ classes:
     - metal_gpti1
     - metal_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: waffle_iron_unmetal.jpg
       folder: waffle_iron_unmetal
   - true_label: waffled
@@ -44,7 +44,7 @@ classes:
     - waffled_gpti1
     - waffled_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: waffle_iron_unwaffled.jpg
       folder: waffle_iron_unwaffled
 models:

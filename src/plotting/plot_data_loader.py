@@ -146,7 +146,7 @@ def preprocess_and_clean(set_prefix: str, file_name="plotting_data.csv", also_sa
     # keep only the last layer of each model
     latest_layers = merged.groupby("Model")["Layer"].max()
     merged = merged[merged["Layer"].isin(latest_layers)]
-    merged["ImputationOf"] = np.where(
+    merged["AblationOf"] = np.where(
         merged["Examples"] == merged["Class"],
         np.NAN,  # case when Examples == Class
         merged.apply(

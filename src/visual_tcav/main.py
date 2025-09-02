@@ -106,41 +106,41 @@ def build_steps(config) -> List[Dict]:
                     }
                 )
 
-                # 3) Optional: Local TCAV on concept imputation example
-                imputation = getattr(concept_group, "concept_imputation", None)
-                if imputation and getattr(imputation, "example", None):
-                    tgt = str(imputation.example)
+                # 3) Optional: Local TCAV on concept ablation example
+                ablation = getattr(concept_group, "concept_ablation", None)
+                if ablation and getattr(ablation, "example", None):
+                    tgt = str(ablation.example)
                     steps.append(
                         {
                             "id": step_id(
                                 obj_name,
                                 cg_label,
                                 model_name,
-                                "local_imputation_example",
+                                "local_ablation_example",
                                 tgt,
                             ),
-                            "log": f"Local • imputation example • {obj_name} • {cg_label} • {model_name}",
+                            "log": f"Local • ablation example • {obj_name} • {cg_label} • {model_name}",
                             "run": lambda cg=concept_group, m=model: run_local_visual_tcav(
-                                cg.concept_imputation.example, cg, m, is_imputation=True
+                                cg.concept_ablation.example, cg, m, is_ablation=True
                             ),
                         }
                     )
 
-                # 4) Optional: Global TCAV on concept imputation folder
-                if imputation and getattr(imputation, "folder", None):
-                    tgt = str(imputation.folder)
+                # 4) Optional: Global TCAV on concept ablation folder
+                if ablation and getattr(ablation, "folder", None):
+                    tgt = str(ablation.folder)
                     steps.append(
                         {
                             "id": step_id(
                                 obj_name,
                                 cg_label,
                                 model_name,
-                                "global_imputation_folder",
+                                "global_ablation_folder",
                                 tgt,
                             ),
-                            "log": f"Global • imputation folder • {obj_name} • {cg_label} • {model_name}",
+                            "log": f"Global • ablation folder • {obj_name} • {cg_label} • {model_name}",
                             "run": lambda oc=object_class, cg=concept_group, m=model: run_global_visual_tcav(
-                                cg.concept_imputation.folder, oc, cg, m, is_imputation=True
+                                cg.concept_ablation.folder, oc, cg, m, is_ablation=True
                             ),
                         }
                     )

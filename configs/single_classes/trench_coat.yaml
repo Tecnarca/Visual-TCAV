@@ -8,7 +8,7 @@ classes:
     - grandfather_gpti1
     - grandfather_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: trench_coat_ungrandfather.jpg
       folder: trench_coat_ungrandfather
   - true_label: guitarist
@@ -17,7 +17,7 @@ classes:
     - guitarist_gpti1
     - guitarist_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: trench_coat_unguitarist.jpg
       folder: trench_coat_unguitarist
   - true_label: leather
@@ -26,7 +26,7 @@ classes:
     - leather_gpti1
     - leather_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: trench_coat_unleather.jpg
       folder: trench_coat_unleather
   - true_label: woven
@@ -35,7 +35,7 @@ classes:
     - woven_gpti1
     - woven_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: trench_coat_unwoven.jpg
       folder: trench_coat_unwoven
 models:

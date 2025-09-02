@@ -14,7 +14,7 @@ classes:
     - lichen_gpti1
     - lichen_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: stone_wall_unlichen.jpg
       folder: stone_wall_unlichen
   - true_label: stone
@@ -23,7 +23,7 @@ classes:
     - stone_gpti1
     - stone_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: stone_wall_unstone.jpg
       folder: stone_wall_unstone
 models:

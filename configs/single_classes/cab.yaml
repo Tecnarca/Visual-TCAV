@@ -8,7 +8,7 @@ classes:
     - taxi_sign_gpti1
     - taxi_sign_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: cab_untaxi_sign.jpg
       folder: cab_untaxi_sign
 models:

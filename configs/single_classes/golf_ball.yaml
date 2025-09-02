@@ -8,7 +8,7 @@ classes:
     - grass_gpti1
     - grass_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: golf_ball_ungrass.jpg
       folder: golf_ball_ungrass
   - true_label: plastic
@@ -17,7 +17,7 @@ classes:
     - plastic_gpti1
     - plastic_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: golf_ball_unplastic.jpg
       folder: golf_ball_unplastic
   - true_label: sphere
@@ -26,7 +26,7 @@ classes:
     - sphere_gpti1
     - sphere_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: golf_ball_unsphere.jpg
       folder: golf_ball_unsphere
 models:

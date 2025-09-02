@@ -6,7 +6,7 @@ Generate one YAML per class from a CSV of (Class, Concept).
   (override with --csv)
 - For each Class, writes YAML to: /home/tecnarca/PycharmProjects/Visual-TCAV/configs/single_classes/<class>.yaml
   (override with --out)
-- Uses example images and concept-imputation assets from:
+- Uses example images and concept-ablation assets from:
     test_images:   /home/tecnarca/PycharmProjects/Visual-TCAV/VisualTCAV/test_images (override with --test)
     concept_images:/home/tecnarca/PycharmProjects/Visual-TCAV/VisualTCAV/concept_images (override with --concepts)
 
@@ -17,9 +17,9 @@ Rules:
    * `true_label` is the (lowercased) Concept.
    * `generated` are the directory names in `concept_images` that equal the concept
      or start with `<concept>_` (e.g., `striped_flux`, `striped_sd35`, ...).
-   * `concept_imputation.example` is an image file under `test_images` named either
+   * `concept_ablation.example` is an image file under `test_images` named either
        `<concept>_<class>.<ext>` OR `<class>_<concept>.<ext>` (first match wins).
-   * `concept_imputation.folder` is a folder under `test_images` named either
+   * `concept_ablation.folder` is a folder under `test_images` named either
        `<class>_<concept>` (preferred) or `<concept>_<class>`.
    * Both the example image and the folder must exist; otherwise that concept is skipped.
 
@@ -182,13 +182,13 @@ def build_yaml_for_class(
             "bootstrap": True,
         }
         if example_candidate and folder_name:
-            group["concept_imputation"] = {
+            group["concept_ablation"] = {
                 "example": example_candidate,
                 "folder": folder_name,
             }
         else:
             print(
-                f"  ℹ No concept_imputation for concept '{concept}' in class '{cls}' "
+                f"  ℹ No concept_ablation for concept '{concept}' in class '{cls}' "
                 f"(looked for {stems})."
             )
 
@@ -238,14 +238,14 @@ def validate_yaml_paths(data: dict, test_root: Path, concepts_root: Path) -> Lis
                 gp = concepts_root / gen
                 if not gp.exists() or not gp.is_dir():
                     issues.append(f"Missing generated dir: {gp}")
-            ci = grp.get("concept_imputation") or {}
+            ci = grp.get("concept_ablation") or {}
             if ci:
                 exf = test_root / ci.get("example", "")
                 fld = test_root / ci.get("folder", "")
                 if not exf.exists() or not exf.is_file():
-                    issues.append(f"Missing concept_imputation.example: {exf}")
+                    issues.append(f"Missing concept_ablation.example: {exf}")
                 if not fld.exists() or not fld.is_dir():
-                    issues.append(f"Missing concept_imputation.folder: {fld}")
+                    issues.append(f"Missing concept_ablation.folder: {fld}")
     return issues
 
 

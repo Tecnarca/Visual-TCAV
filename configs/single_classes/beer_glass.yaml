@@ -8,7 +8,7 @@ classes:
     - bubbly_gpti1
     - bubbly_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: beer_glass_unbubbly.jpg
       folder: beer_glass_unbubbly
   - true_label: glass
@@ -17,7 +17,7 @@ classes:
     - glass_gpti1
     - glass_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: beer_glass_unglass.jpg
       folder: beer_glass_unglass
 models:

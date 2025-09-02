@@ -8,7 +8,7 @@ classes:
     - dotted_gpti1
     - dotted_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: dalmatian_undotted.jpg
       folder: dalmatian_undotted
   - true_label: fabric
@@ -17,7 +17,7 @@ classes:
     - fabric_gpti1
     - fabric_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: dalmatian_unfabric.jpg
       folder: dalmatian_unfabric
   - true_label: spotted
@@ -26,7 +26,7 @@ classes:
     - spotted_gpti1
     - spotted_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: dalmatian_unspotted.jpg
       folder: dalmatian_unspotted
 models:

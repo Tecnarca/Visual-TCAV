@@ -8,7 +8,7 @@ classes:
     - striped_gpti1
     - striped_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: zebra_unstriped.jpg
       folder: zebra_unstriped
   - true_label: wrinkled
@@ -17,7 +17,7 @@ classes:
     - wrinkled_gpti1
     - wrinkled_sd35
     bootstrap: true
-    concept_imputation:
+    concept_ablation:
       example: zebra_unwrinkled.jpg
       folder: zebra_unwrinkled
 models:
