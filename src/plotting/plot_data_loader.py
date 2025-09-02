@@ -158,7 +158,7 @@ def preprocess_and_clean(set_prefix: str, file_name="plotting_data.csv", also_sa
     merged["Concept_split"] = merged["Concept"].str.split("_").str[0]
     merged["LLM"] = merged["Concept"].str.split("_").str[1]
     merged.loc[
-        merged.Concept.str.contains("taxi_sign"), "LLM"
+        merged.Concept.str.contains("taxi_sign") | merged.Concept.str.contains("leopard_print"), "LLM"
     ] = merged["Concept"].str.split("_").str[2]
     merged["Bootstrap"] = merged["Concept"].str.extract(r"_bootstrap_(\d+)")
     merged["Bootstrap"] = pd.to_numeric(merged["Bootstrap"], errors="coerce")
